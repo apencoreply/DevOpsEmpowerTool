@@ -1,9 +1,9 @@
 
-stages:
-- stage: ChatGPT
-  displayName: ChatGPT stage
-  dependsOn: JMeterTest
-  condition: and(succeeded(), eq('${{ parameters.ChatGPT }}', 'true'))
+# stages:
+# - stage: ChatGPT
+#   displayName: ChatGPT stage
+#   dependsOn: JMeterTest
+#   condition: and(succeeded(), eq('${{ parameters.ChatGPT }}', 'true'))
 
   jobs:
   - job: Chat
