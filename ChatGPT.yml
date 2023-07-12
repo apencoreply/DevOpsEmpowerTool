@@ -3,7 +3,7 @@ stages:
 - stage: ChatGPT
   displayName: ChatGPT stage
   dependsOn: JMeterTest
-  condition: succeeded()
+  condition: and(succeeded(), eq('${{ parameters.ChatGPT }}', 'true'))
 
   jobs:
   - job: Chat
