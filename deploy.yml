@@ -1,9 +1,9 @@
 
-stages:
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
-  condition: and(succeeded(), eq('${{ parameters.Deploy }}', 'true'))
+# stages:
+# - stage: Deploy
+#   displayName: Deploy stage
+#   dependsOn: Build
+#   condition: and(succeeded(), eq('${{ parameters.Deploy }}', 'true'))
 
   jobs:
   - deployment: Deploy
