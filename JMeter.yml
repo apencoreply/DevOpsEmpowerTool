@@ -4,8 +4,11 @@
 #   displayName: JMeter Test stage
 #   dependsOn: Deploy
 #   condition: and(succeeded(), eq('${{ parameters.JMeter }}', 'true'))
-
-
+parameters:
+  threads: '10'
+  loops: '10'
+  rampup: '1'
+  
   jobs:
   - job: Test
     displayName: Test
@@ -33,12 +36,12 @@
           $filePath = "$(System.DefaultWorkingDirectory)/FiDelTest.jmx"
           $content = Get-Content -Path $filePath -Raw
 
-          $newContent = $content -replace "<stringProp name=`"ThreadGroup.num_threads`">10</stringProp>", "<stringProp name=`"ThreadGroup.num_threads`">3</stringProp>"
+          $newContent = $content -replace "<stringProp name=`"ThreadGroup.num_threads`">10</stringProp>", "<stringProp name=`"ThreadGroup.num_threads`">$threads</stringProp>"
+          $newContent = $newContent -replace "<stringProp name=`"ThreadGroup.ramp_time`">1</stringProp>", "<stringProp name=`"ThreadGroup.ramp_time`">$rampup</stringProp>"
+          $newContent = $newContent -replace "<stringProp name=`"LoopController.loops`">10</stringProp>", "<stringProp name=`"LoopController.loops`">$loops</stringProp>"
 
           $newContent | Set-Content -Path $filePath
 
-        # $newContent = $newContent -replace "<stringProp name=`"ThreadGroup.ramp_time`">1</stringProp>", "<stringProp name=`"ThreadGroup.ramp_time`">1</stringProp>"
-        # $newContent = $newContent -replace "<stringProp name=`"LoopController.loops`">10</stringProp>", "<stringProp name=`"LoopController.loops`">1</stringProp>"
     
     - script: |
         cat $(System.DefaultWorkingDirectory)/*.jmx
