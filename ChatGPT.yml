@@ -137,7 +137,7 @@ jobs:
       UserName: "$(${{ parameters.EmailUsername }})"
       Password: "$(${{ parameters.EmailPassword }})"
       From: "$(${{ parameters.EmailUsername }})"
-      Recipient: "$(${{ parameters.EmailUsernameRecipient }})"
+      To: "$(${{ parameters.EmailUsernameRecipient }})"
       Subject: 'Pipeline Notification'
       Body: |
         Hello,
