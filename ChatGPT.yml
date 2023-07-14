@@ -18,6 +18,15 @@ parameters:
   - name: apiUrl
     type: string
     default: 'https://apchatgpt.openai.azure.com/openai/deployments/gpt-chat/chat/completions?api-version=2023-03-15-preview'
+  - name: EmailUsername
+    type: string
+    default: ''
+  - name: EmailPassword
+    type: string
+    default: ''
+  - name: EmailUsernameRecipient
+    type: string
+    default: 'alessandro.penco11@gmail.com'
 
 jobs:
 - job: Chat
@@ -119,3 +128,23 @@ jobs:
         } | ConvertTo-Json
 
         Invoke-RestMethod -Uri $uri -Method Post -Body $body -ContentType 'application/json'
+  
+  - task: SendEmail@1
+    inputs:
+      SmtpServer: 'smtp.gmail.com'
+      Port: '587'
+      EnableSsl: true
+      UserName: '$(EmailUsername)'
+      Password: '$(EmailPassword)'
+      From: '$(EmailUsername)'
+      Recipient: '$(EmailUsernameRecipient)'
+      Subject: 'Pipeline Notification'
+      Body: |
+        Hello,
+
+        This email is sent from an Azure DevOps pipeline.
+
+        Regards,
+        Your Pipeline
+
+      Attachments: '$(System.DefaultWorkingDirectory)/generatedText.txt'
