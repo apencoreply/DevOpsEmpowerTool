@@ -40,9 +40,9 @@ jobs:
       targetType: 'inline'
       script: |
         $filePath = "$(System.DefaultWorkingDirectory)/FiDelTest.jmx"
-        $threads = "$(threads)"
-        $rampup = "$(rampup)"
-        $loops = "$(loops)"
+        $threads = "$(${{ parameters.threads }})"
+        $rampup = "$(${{ parameters.rampup }})"
+        $loops = "$(${{ parameters.loops }})"
         $content = Get-Content -Path $filePath -Raw
 
         $newContent = $content -replace "<stringProp name=`"ThreadGroup.num_threads`">10</stringProp>", "<stringProp name=`"ThreadGroup.num_threads`">$threads</stringProp>"
