@@ -7,10 +7,10 @@
 
 parameters:
   - name: tokens
-    type: integer
+    type: number
     default: 1000
   - name: temperature
-    type: float
+    type: number
     default: 0.7
   - name: apiKey
     type: string
