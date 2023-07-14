@@ -7,11 +7,11 @@
 
 parameters:
   - name: tokens
-    type: number
-    default: 1000
+    type: string
+    default: '1000'
   - name: temperature
-    type: number
-    default: 0.7
+    type: string
+    default: '0.7'
   - name: apiKey
     type: string
     default: '4c7be06a162641039767063e4830a371'
@@ -70,8 +70,8 @@ jobs:
         $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"
         $apiKey = "${{ parameters.apiKey }}"
         $apiUrl = "${{ parameters.apiUrl }}"
-        $tokens = "$(${{ parameters.tokens }})"
-        $temperature = "$(${{ parameters.temperature }})"
+        $tokens = [double]"$(${{ parameters.tokens }})"
+        $temperature = [int]"$(${{ parameters.temperature }})"
 
         # Read JTL results
         $jtlResults = Get-Content -Path $jtlResultsFile
