@@ -68,8 +68,8 @@ jobs:
       script: |
         $jtlResultsFile = "$(System.DefaultWorkingDirectory)/jtl_results.txt"
         $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"
-        $apiKey = "$(${{ parameters.apiKey }})"
-        $apiUrl = "$(${{ parameters.apiUrl }})"
+        $apiKey = "${{ parameters.apiKey }}"
+        $apiUrl = "${{ parameters.apiUrl }}"
         $tokens = "$(${{ parameters.tokens }})"
         $temperature = "$(${{ parameters.temperature }})"
 
