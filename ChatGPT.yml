@@ -134,10 +134,10 @@ jobs:
       SmtpServer: 'smtp.gmail.com'
       Port: '587'
       EnableSsl: true
-      UserName: "$(${{ parameters.EmailUsername }})"
-      Password: "$(${{ parameters.EmailPassword }})"
-      From: "$(${{ parameters.EmailUsername }})"
-      To: "$(${{ parameters.EmailUsernameRecipient }})"
+      UserName: "${{ parameters.emailUsername }}"
+      Password: "${{ parameters.EmailPassword }}"
+      From: "${{ parameters.emailUsername }}"
+      To: "${{ parameters.EmailUsernameRecipient }}"
       Subject: 'Pipeline Notification'
       Body: |
         Hello,
