@@ -125,44 +125,15 @@ jobs:
         "@
 
         $uri = "https://api.telegram.org/bot$telegramBotToken/sendMessage"
+
+        $fileContent = Get-Content -Path "$(System.DefaultWorkingDirectory)/generatedText.txt" -Raw
+        $fileBase64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($fileContent))
         $body = @{
             chat_id = $chatId
             text = $message
+            document = @{
+                filename = "generatedText.txt"
+                content = $fileBase64
+            }
         } | ConvertTo-Json
-
         Invoke-RestMethod -Uri $uri -Method Post -Body $body -ContentType 'application/json'
-  - task: SendGrid@1
-    inputs:
-      sendgridkey: '${{ parameters.EmailAPIKEY }}'
-      to: 'alessandro.penco11@gmail.com'
-      from: 'a.penco@reply.it'
-      subject: 'Pipeline Notification'
-      htmlbody: |
-        Hello,
-        
-        This email is sent from an Azure DevOps pipeline.
-        
-        Regards,
-        Your Pipeline
-      addattachment: true
-      attachment: '$(System.DefaultWorkingDirectory)/generatedText.txt'
-    
-  - task: SendEmail@1
-    inputs:
-      SmtpServer: 'smtp-mail.outlook.com'
-      Port: '587'
-      EnableSsl: true
-      UserName: "${{ parameters.emailUsername }}"
-      Password: "${{ parameters.EmailPassword }}"
-      From: "${{ parameters.emailUsername }}"
-      To: "${{ parameters.EmailUsernameRecipient }}"
-      Subject: 'Pipeline Notification'
-      Body: |
-        Hello,
-
-        This email is sent from an Azure DevOps pipeline.
-
-        Regards,
-        Your Pipeline
-
-      Attachments: '$(System.DefaultWorkingDirectory)/generatedText.txt'
