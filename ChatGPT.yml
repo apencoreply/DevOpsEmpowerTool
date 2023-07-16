@@ -107,22 +107,6 @@ jobs:
         Write-Host $generatedText
 
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
-
-
-  
-  - task: PowerShell@2
-    displayName: 'Send Document to Telegram Bot'
-    inputs:
-      targetType: 'inline'
-      script: |
-        $telegramBotToken = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
-        $chatId = '549538016'
-        $telegramApiUrl = "https://api.telegram.org/bot$telegramBotToken/sendDocument"
-        $documentPath = "$(System.DefaultWorkingDirectory)/generatedText.md"
-        $command = "curl -F document=@`"$documentPath`" `"$telegramApiUrl?chat_id=$chatId`""
-
-        Invoke-Expression -Command $command
-
           
   - task: PowerShell@2
     displayName: 'Send Telegram Notification'
