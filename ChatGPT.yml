@@ -115,7 +115,8 @@ jobs:
       script: |
         $telegramBotToken = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
         $chatId = '549538016'
-        $generatedText = Get-Content -Path "$(System.DefaultWorkingDirectory)/generatedText.md"
+        $generatedTextPath = "$(System.DefaultWorkingDirectory)/generatedText.md"
+        $generatedText = Get-Content -Path $generatedTextPath 
         $message = @"
         The pipeline has completed successfully.
         Generated Text:
@@ -123,17 +124,14 @@ jobs:
         $generatedText
         ---
         "@
+        $uri = "https://api.telegram.org/bot$telegramBotToken/sendDocument"
 
-        $uri = "https://api.telegram.org/bot$telegramBotToken/sendMessage"
-
-        $fileContent = Get-Content -Path "$(System.DefaultWorkingDirectory)/generatedText.md" -Raw
-        $fileBase64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($fileContent))
+        $fileBytes = [System.IO.File]::ReadAllBytes($generatedTextPath)
+        $fileBase64 = [System.Convert]::ToBase64String($fileBytes)  
         $body = @{
             chat_id = $chatId
-            text = $message
-            document = @{
-                filename = "generatedText.md"
-                content = $fileBase64
-            }
+            document = $fileBase64
+            caption = $message
+            filename = "generatedText.md"
         } | ConvertTo-Json
-        Invoke-RestMethod -Uri $uri -Method Post -Body $body -ContentType 'application/json'
+        Invoke-RestMethod -Uri $uri -Method POST -Body $body -ContentType 'application/json'
