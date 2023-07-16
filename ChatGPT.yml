@@ -106,7 +106,7 @@ jobs:
         # Display the generated text
         Write-Host $generatedText
 
-        $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.txt" -Encoding utf8
+        $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
 
   - task: PowerShell@2
     displayName: 'Send Telegram Notification'
@@ -115,7 +115,7 @@ jobs:
       script: |
         $telegramBotToken = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
         $chatId = '549538016'
-        $generatedText = Get-Content -Path "$(System.DefaultWorkingDirectory)/generatedText.txt"
+        $generatedText = Get-Content -Path "$(System.DefaultWorkingDirectory)/generatedText.md"
         $message = @"
         The pipeline has completed successfully.
         Generated Text:
@@ -126,13 +126,13 @@ jobs:
 
         $uri = "https://api.telegram.org/bot$telegramBotToken/sendMessage"
 
-        $fileContent = Get-Content -Path "$(System.DefaultWorkingDirectory)/generatedText.txt" -Raw
+        $fileContent = Get-Content -Path "$(System.DefaultWorkingDirectory)/generatedText.md" -Raw
         $fileBase64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($fileContent))
         $body = @{
             chat_id = $chatId
             text = $message
             document = @{
-                filename = "generatedText.txt"
+                filename = "generatedText.md"
                 content = $fileBase64
             }
         } | ConvertTo-Json
