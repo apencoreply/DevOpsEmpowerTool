@@ -27,6 +27,9 @@ parameters:
   - name: EmailUsernameRecipient
     type: string
     default: 'alessandro.penco11@gmail.com'
+  - name: APIKEY
+    type: string
+    default: ''
 
 jobs:
 - job: Chat
@@ -130,7 +133,7 @@ jobs:
         Invoke-RestMethod -Uri $uri -Method Post -Body $body -ContentType 'application/json'
   - task: SendGrid@1
     inputs:
-      sendgridkey: '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'
+      sendgridkey: '${{ parameters.APIKEY }}'
       to: 'alessandro.penco11@gmail.com'
       from: 'a.penco@reply.it'
       subject: 'Pipeline Notification'
