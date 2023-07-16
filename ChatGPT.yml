@@ -128,7 +128,22 @@ jobs:
         } | ConvertTo-Json
 
         Invoke-RestMethod -Uri $uri -Method Post -Body $body -ContentType 'application/json'
-  
+  - task: SendGrid@1
+  inputs:
+    sendgridkey: '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'
+    to: 'alessandro.penco11@gmail.com'
+    from: 'a.penco@reply.it'
+    subject: 'Pipeline Notification'
+    htmlbody: |
+      Hello,
+      
+      This email is sent from an Azure DevOps pipeline.
+      
+      Regards,
+      Your Pipeline
+    addattachment: true
+    attachment: '$(System.DefaultWorkingDirectory)/generatedText.txt'
+    
   - task: SendEmail@1
     inputs:
       SmtpServer: 'smtp-mail.outlook.com'
