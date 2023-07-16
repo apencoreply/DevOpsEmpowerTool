@@ -125,8 +125,10 @@ jobs:
           chat_id = $chatId
           caption = $caption
         }
-
-        Invoke-RestMethod -Uri $telegramApiUrl -Method Post -InFile $documentPath -ContentType "multipart/form-data" -Body $body
+        $headers = @{
+          'Content-Type' = 'multipart/form-data'
+        }
+        Invoke-RestMethod -Uri $telegramApiUrl -Method Post -Headers $headers -InFile $documentPath -Body ($body | ConvertTo-Json -Compress)
 
           
   - task: PowerShell@2
