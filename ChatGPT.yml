@@ -109,7 +109,7 @@ jobs:
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
 
 
-  steps:
+  
   - task: PowerShell@2
     displayName: 'Send Document to Telegram Bot'
     inputs:
