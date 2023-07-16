@@ -119,12 +119,9 @@ jobs:
         $chatId = '549538016'
         $telegramApiUrl = "https://api.telegram.org/bot$telegramBotToken/sendDocument"
         $documentPath = "$(System.DefaultWorkingDirectory)/generatedText.md"
-        $caption = "Hello, this is the document you requested."
+        $command = "curl -F document=@`"$documentPath`" `"$telegramApiUrl?chat_id=$chatId`""
 
-        $headers = @{
-        'Content-Type' = 'multipart/form-data'
-        }
-        Invoke-RestMethod -Uri $telegramApiUrl -Method Post -Headers $headers -InFile $documentPath -FormData @{ chat_id = $chatId; caption = $caption }
+        Invoke-Expression -Command $command
 
           
   - task: PowerShell@2
