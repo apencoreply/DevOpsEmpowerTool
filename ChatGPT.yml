@@ -140,7 +140,7 @@ jobs:
         $generatedText
         ---
         "@
-        $uri = "https://api.telegram.org/bot$telegramBotToken/sendDocument" 
+        $uri = "https://api.telegram.org/bot$telegramBotToken/sendMessage" 
         $body = @{
             chat_id = $chatId
             document = $generatedText
