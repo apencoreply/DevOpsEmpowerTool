@@ -131,7 +131,7 @@ jobs:
   
   - task: SendEmail@1
     inputs:
-      SmtpServer: 'smtp.gmail.com'
+      SmtpServer: 'smtp-mail.outlook.com'
       Port: '587'
       EnableSsl: true
       UserName: "${{ parameters.emailUsername }}"
