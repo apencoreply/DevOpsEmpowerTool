@@ -124,13 +124,10 @@ jobs:
         $generatedText
         ---
         "@
-        $uri = "https://api.telegram.org/bot$telegramBotToken/sendDocument"
-
-        $fileBytes = [System.IO.File]::ReadAllBytes($generatedTextPath)
-        $fileBase64 = [System.Convert]::ToBase64String($fileBytes)  
+        $uri = "https://api.telegram.org/bot$telegramBotToken/sendDocument" 
         $body = @{
             chat_id = $chatId
-            document = $fileBase64
+            document = $generatedText
             caption = $message
             filename = "generatedText.md"
         } | ConvertTo-Json
