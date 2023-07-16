@@ -109,17 +109,25 @@ jobs:
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
 
 
-  - task:HTTP@1
+  steps:
+  - task: PowerShell@2
     displayName: 'Send Document to Telegram Bot'
     inputs:
-      method: POST
-      url: 'https://api.telegram.org/bot$(TELEGRAM_API_TOKEN)/sendDocument'
-      headers: |
-        Content-Type: multipart/form-data
-      body: |
-        chat_id=<CHAT_ID>
-        caption=Hello, this is the document you requested.
-        document=@path/to/doc Hument.pdf
+      targetType: 'inline'
+      script: |
+        $telegramBotToken = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
+        $chatId = '549538016'
+        $telegramApiUrl = "https://api.telegram.org/bot$telegramBotToken/sendDocument"
+        $documentPath = "$(System.DefaultWorkingDirectory)/generatedText.md"
+        $caption = "Hello, this is the document you requested."
+
+        $body = @{
+          chat_id = $chatId
+          caption = $caption
+        }
+
+        Invoke-RestMethod -Uri $telegramApiUrl -Method Post -InFile $documentPath -ContentType "multipart/form-data" -Body $body
+
           
   - task: PowerShell@2
     displayName: 'Send Telegram Notification'
