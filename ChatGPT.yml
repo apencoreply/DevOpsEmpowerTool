@@ -121,14 +121,10 @@ jobs:
         $documentPath = "$(System.DefaultWorkingDirectory)/generatedText.md"
         $caption = "Hello, this is the document you requested."
 
-        $body = @{
-          chat_id = $chatId
-          caption = $caption
-        }
         $headers = @{
-          'Content-Type' = 'multipart/form-data'
+        'Content-Type' = 'multipart/form-data'
         }
-        Invoke-RestMethod -Uri $telegramApiUrl -Method Post -Headers $headers -InFile $documentPath -Body ($body | ConvertTo-Json -Compress)
+        Invoke-RestMethod -Uri $telegramApiUrl -Method Post -Headers $headers -InFile $documentPath -FormData @{ chat_id = $chatId; caption = $caption }
 
           
   - task: PowerShell@2
