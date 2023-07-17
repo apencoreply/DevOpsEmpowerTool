@@ -50,14 +50,10 @@ jobs:
         $newContent = $newContent -replace "<stringProp name=`"LoopController.loops`">10</stringProp>", "<stringProp name=`"LoopController.loops`">$loops</stringProp>"
 
         $newContent | Set-Content -Path $filePath
-
   
   - script: |
-      cat $(System.DefaultWorkingDirectory)/*.jmx
-    displayName: 'Explore results'
-  
-  - script: |
-      $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.6/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl
+      $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.6/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > summary.txt
+      cat summary.txt
     displayName: 'Run JMeter Test'
 
   - script: |
