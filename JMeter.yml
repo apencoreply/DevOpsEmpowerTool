@@ -53,20 +53,28 @@ jobs:
   
   - script: |
       $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.6/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
-      dir $(System.DefaultWorkingDirectory)
-      cat $(System.DefaultWorkingDirectory)/summary.txt
     displayName: 'Run JMeter Test'
 
-  - task: PowerShell@2
-    displayName: 'List contents of DefaultWorkingDirectory'
-    inputs:
-      targetType: 'inline'
-      script: |
-        $directory = "$(System.DefaultWorkingDirectory)"
-        Get-ChildItem -Path $directory
   - script: |
       cat $(System.DefaultWorkingDirectory)/summary.txt
-    displayName: 'Run JMeter Test'
+    displayName: 'Read JMeter Test summary'
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'inline'
+      script: |
+        def filter_lines_with_summary(file_path):
+            filtered_lines = []
+            with open(file_path, 'r') as file:
+                for line in file:
+                    if line.startswith('summary'):
+                        filtered_lines.append(line)
+            return filtered_lines
+        
+        # Example usage:
+        file_path = r'$(System.DefaultWorkingDirectory)/summary.txt'
+        filtered_lines = filter_lines_with_summary(file_path)
+        for line in filtered_lines:
+            print(line.strip())
   - script: |
       cat $(System.DefaultWorkingDirectory)/test_summary.jtl
     displayName: 'Explore results'
