@@ -114,14 +114,9 @@ jobs:
       versionSpec: '3.x'
       addToPath: true
       architecture: 'x64'
-      
-  - task: PowerShell@2
-    displayName: 'Install requests'
-    inputs:
-      targetType: 'inline'
-      script: |
-        pip install requests
 
+  - script: pip install requests
+    name: "Install requests"
     
   - task: PythonScript@0
     inputs:
