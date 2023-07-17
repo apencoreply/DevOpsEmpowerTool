@@ -64,7 +64,9 @@ jobs:
       script: |
         $directory = "$(System.DefaultWorkingDirectory)"
         Get-ChildItem -Path $directory
-
+  - script: |
+      cat $(System.DefaultWorkingDirectory)/summary.txt
+    displayName: 'Run JMeter Test'
   - script: |
       cat $(System.DefaultWorkingDirectory)/test_summary.jtl
     displayName: 'Explore results'
