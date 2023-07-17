@@ -57,6 +57,14 @@ jobs:
       cat $(System.DefaultWorkingDirectory)/summary.txt
     displayName: 'Run JMeter Test'
 
+  - task: PowerShell@2
+    displayName: 'List contents of DefaultWorkingDirectory'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $directory = "$(System.DefaultWorkingDirectory)"
+        Get-ChildItem -Path $directory
+
   - script: |
       cat $(System.DefaultWorkingDirectory)/test_summary.jtl
     displayName: 'Explore results'
