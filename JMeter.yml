@@ -52,8 +52,8 @@ jobs:
         $newContent | Set-Content -Path $filePath
   
   - script: |
-      $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.6/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > summary.txt
-      cat summary.txt
+      $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.6/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
+      cat $(System.DefaultWorkingDirectory)/summary.txt
     displayName: 'Run JMeter Test'
 
   - script: |
