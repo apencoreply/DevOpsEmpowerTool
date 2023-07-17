@@ -71,11 +71,11 @@ jobs:
         return filtered_lines
             
         def remove_lines_with_200_ok(file_path):
-        filtered_lines = []
-        with open(file_path, 'r') as file:
-            for line in file:
-                if '200,OK' not in line:
-                    filtered_lines.append(line)
+          filtered_lines = []
+          with open(file_path, 'r') as file:
+              for line in file:
+                  if '200,OK' not in line:
+                      filtered_lines.append(line)
         return filtered_lines
         
         file_path = r'$(System.DefaultWorkingDirectory)/summary.txt'
