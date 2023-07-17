@@ -68,7 +68,7 @@ jobs:
               for line in file:
                   if line.startswith('summary'):
                       filtered_lines.append(line)
-        return filtered_lines
+          return filtered_lines
             
         def remove_lines_with_200_ok(file_path):
           filtered_lines = []
@@ -76,7 +76,7 @@ jobs:
               for line in file:
                   if '200,OK' not in line:
                       filtered_lines.append(line)
-        return filtered_lines
+          return filtered_lines
         
         file_path = r'$(System.DefaultWorkingDirectory)/summary.txt'
         filtered_lines = filter_lines_with_summary(file_path)
