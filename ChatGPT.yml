@@ -114,6 +114,13 @@ jobs:
       versionSpec: '3.x'
       addToPath: true
       architecture: 'x64'
+      
+  - task: displayName: 'Install requests'
+    inputs:
+      targetType: 'inline'
+      script: |
+        pip install requests
+
     
   - task: PythonScript@0
     inputs:
