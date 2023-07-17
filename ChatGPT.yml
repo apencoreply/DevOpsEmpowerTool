@@ -112,6 +112,7 @@ jobs:
     inputs:
       scriptSource: 'inline'
       script: |
+        %pip install requests
         import requests
         
         bot_token = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
