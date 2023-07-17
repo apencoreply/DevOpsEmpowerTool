@@ -109,13 +109,11 @@ jobs:
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
 
   
-  - name: Set up Python
-    uses: actions/setup-python@v2
-    with:
-      python-version: 3.x
-
-  - name: Install requests library
-    run: pip install requests
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+      architecture: 'x64'
     
   - task: PythonScript@0
     inputs:
