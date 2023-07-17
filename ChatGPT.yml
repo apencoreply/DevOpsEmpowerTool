@@ -143,28 +143,3 @@ jobs:
         
         # Check the response status code or content for errors
         print(response.status_code, response.content)
-          
-  - task: PowerShell@2
-    displayName: 'Send Telegram Notification'
-    inputs:
-      targetType: 'inline'
-      script: |
-        $telegramBotToken = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
-        $chatId = '549538016'
-        $generatedTextPath = "$(System.DefaultWorkingDirectory)/generatedText.md"
-        $generatedText = Get-Content -Path $generatedTextPath 
-        $message = @"
-        The pipeline has completed successfully.
-        Generated Text:
-        ---
-        $generatedText
-        ---
-        "@
-        $uri = "https://api.telegram.org/bot$telegramBotToken/sendMessage" 
-        $body = @{
-            chat_id = $chatId
-            document = $generatedText
-            caption = $message
-            filename = "generatedText.md"
-        } | ConvertTo-Json
-        Invoke-RestMethod -Uri $uri -Method POST -Body $body -ContentType 'application/json'
