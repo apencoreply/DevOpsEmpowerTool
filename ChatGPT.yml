@@ -115,7 +115,8 @@ jobs:
       addToPath: true
       architecture: 'x64'
       
-  - task: displayName: 'Install requests'
+  - task: PowerShell@2
+    displayName: 'Install requests'
     inputs:
       targetType: 'inline'
       script: |
