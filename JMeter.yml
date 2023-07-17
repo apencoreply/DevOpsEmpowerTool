@@ -53,6 +53,7 @@ jobs:
   
   - script: |
       $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.6/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
+      cd $(System.DefaultWorkingDirectory)
       cat $(System.DefaultWorkingDirectory)/summary.txt
     displayName: 'Run JMeter Test'
 
