@@ -116,7 +116,6 @@ jobs:
       architecture: 'x64'
 
   - script: |
-    python -m pip install --upgrade pip
     pip install requests
     displayName: 'Install requests'
     
