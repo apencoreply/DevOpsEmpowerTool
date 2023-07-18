@@ -68,31 +68,35 @@ jobs:
               for line in file:
                   if line.startswith('summary'):
                       filtered_lines.append(line)
-          return filtered_lines
+                      
+          # Write the filtered lines back to the same file
+          with open(file_path, 'w') as file:
+              for line in filtered_lines:
+                  file.write(line)
             
+        file_path = r'$(System.DefaultWorkingDirectory)/summary.txt'
+        filter_lines_with_summary(file_path)
+
         def remove_lines_with_200_ok(file_path):
           filtered_lines = []
           with open(file_path, 'r') as file:
               for line in file:
                   if '200,OK' not in line:
                       filtered_lines.append(line)
-          return filtered_lines
-        
-        file_path = r'$(System.DefaultWorkingDirectory)/summary.txt'
-        filtered_lines = filter_lines_with_summary(file_path)
-        for line in filtered_lines:
-            print(line.strip())
-
+          
+          # Write the filtered lines back to the same file
+          with open(file_path, 'w') as file:
+              for line in filtered_lines:
+                  file.write(line)
 
         file_path = r'$(System.DefaultWorkingDirectory)/test_summary.jtl'
-        filtered_lines = remove_lines_with_200_ok(file_path)
-        for line in filtered_lines:
-            print(line.strip())
+        remove_lines_with_200_ok(file_path)
+
 
   - script: |
       cat $(System.DefaultWorkingDirectory)/test_summary.jtl
     displayName: 'Explore results'
-
+    
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: '$(System.DefaultWorkingDirectory)/test_summary.jtl'
