@@ -14,10 +14,10 @@ parameters:
     default: '0.7'
   - name: apiKey
     type: string
-    default: '4c7be06a162641039767063e4830a371'
+    default: ''
   - name: apiUrl
     type: string
-    default: 'https://apchatgpt.openai.azure.com/openai/deployments/gpt-chat/chat/completions?api-version=2023-03-15-preview'
+    default: ''
   - name: EmailUsername
     type: string
     default: ''
@@ -26,7 +26,7 @@ parameters:
     default: ''
   - name: EmailUsernameRecipient
     type: string
-    default: 'alessandro.penco11@gmail.com'
+    default: ''
   - name: EmailAPIKEY
     type: string
     default: ''
