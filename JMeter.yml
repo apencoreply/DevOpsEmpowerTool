@@ -39,7 +39,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $filePath = "$(System.DefaultWorkingDirectory)/FiDelTest.jmx"
+        $filePath = "$(System.DefaultWorkingDirectory)/*.jmx"
         $threads = "$(${{ parameters.threads }})"
         $rampup = "$(${{ parameters.rampup }})"
         $loops = "$(${{ parameters.loops }})"
