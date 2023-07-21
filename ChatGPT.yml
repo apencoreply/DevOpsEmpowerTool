@@ -30,6 +30,9 @@ parameters:
   - name: EmailAPIKEY
     type: string
     default: ''
+  - name: workingDir
+    type: string
+    default: ''
 
 jobs:
 - job: Chat
@@ -50,8 +53,8 @@ jobs:
       targetType: 'inline'
       script: |
         echo "Function Code:"
-        cat $(System.DefaultWorkingDirectory)/*.cs
-        cat $(System.DefaultWorkingDirectory)/*.cs > $(System.DefaultWorkingDirectory)/function_code.txt
+        cat ${{ parameters.workingDir }}/*.cs
+        cat ${{ parameters.workingDir }}/*.cs > ${{ parameters.workingDir }}/function_code.txt
         echo "JTL Results:"
         cat $(System.DefaultWorkingDirectory)/test_summary.jtl
         cat $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/jtl_results.txt
