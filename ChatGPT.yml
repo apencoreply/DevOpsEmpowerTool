@@ -33,6 +33,9 @@ parameters:
   - name: workingDir
     type: string
     default: '$(System.DefaultWorkingDirectory)'
+  - name: caption
+    type: string
+    default: 'Checkout our suggestions!'
 
 jobs:
 - job: Chat
