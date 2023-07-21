@@ -98,8 +98,21 @@ jobs:
               content2 = file2.read()
 
           with open(output_file, 'w') as output:
+              # Write the lines at the beginning of the output file
+              output.write("Result from the JTL file from the JMeter test in which are saved the errors and the description:\n")
+              output.write("---\n")
+              
+              # Write the content of the first file
               output.write(content1)
+              
+              # Write the lines after the content of the first file
+              output.write("\n---\n")
+              output.write("Summary results:\n")
+              output.write("---\n")
+              
+              # Write the content of the second file
               output.write(content2)
+              output.write("\n---\n")
         output_file_path =  r'$(System.DefaultWorkingDirectory)/TestResults.txt'
 
         concatenate_files(test_summary, summary, output_file_path)
