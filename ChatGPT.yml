@@ -48,19 +48,19 @@ jobs:
       targetPath: '$(System.DefaultWorkingDirectory)'
     
   - task: PowerShell@2
-  displayName: 'Prepare JTL Results and Function Code'
-  variables:
-    workingDir: ${{ parameters.workingDir }}
-  inputs:
-    targetType: 'inline'
-    script: |
-      $workingDir = "$(workingDir)" # Retrieve the value saved in the variable
-      echo "Function Code:"
-      cat "$workingDir"/*.cs
-      cat "$workingDir"/*.cs > "$workingDir/function_code.txt"
-      echo "JTL Results:"
-      cat "$(System.DefaultWorkingDirectory)/test_summary.jtl"
-      cat "$(System.DefaultWorkingDirectory)/test_summary.jtl" > "$(System.DefaultWorkingDirectory)/jtl_results.txt"
+    displayName: 'Prepare JTL Results and Function Code'
+    variables:
+      workingDir: ${{ parameters.workingDir }}
+    inputs:
+      targetType: 'inline'
+      script: |
+        $workingDir = "$(workingDir)" # Retrieve the value saved in the variable
+        echo "Function Code:"
+        cat "$workingDir"/*.cs
+        cat "$workingDir"/*.cs > "$workingDir/function_code.txt"
+        echo "JTL Results:"
+        cat "$(System.DefaultWorkingDirectory)/test_summary.jtl"
+        cat "$(System.DefaultWorkingDirectory)/test_summary.jtl" > "$(System.DefaultWorkingDirectory)/jtl_results.txt"
 
   - task: PowerShell@2
     displayName: 'List contents of DefaultWorkingDirectory'
