@@ -27,7 +27,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $jmeterZipUrl = 'https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.zip'
+        $jmeterZipUrl = 'https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.5.zip'
         $jmeterZipPath = '$(System.DefaultWorkingDirectory)/jmeter.zip'
         $jmeterExtractPath = '$(System.DefaultWorkingDirectory)/jmeter'
 
@@ -52,7 +52,7 @@ jobs:
         $newContent | Set-Content -Path $filePath
   
   - script: |
-      $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.6/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
+      $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.5/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
     displayName: 'Run JMeter Test'
 
   - script: |
@@ -74,8 +74,8 @@ jobs:
               for line in filtered_lines:
                   file.write(line)
             
-        file_path = r'$(System.DefaultWorkingDirectory)/summary.txt'
-        filter_lines_with_summary(file_path)
+        summary = r'$(System.DefaultWorkingDirectory)/summary.txt'
+        filter_lines_with_summary(summary)
 
         def remove_lines_with_200_ok(file_path):
           filtered_lines = []
@@ -89,11 +89,26 @@ jobs:
               for line in filtered_lines:
                   file.write(line)
 
-        file_path = r'$(System.DefaultWorkingDirectory)/test_summary.jtl'
-        remove_lines_with_200_ok(file_path)
+        test_summary = r'$(System.DefaultWorkingDirectory)/test_summary.jtl'
+        remove_lines_with_200_ok(test_summary)
+      
+        def concatenate_files(input_file1, input_file2, output_file):
+          with open(input_file1, 'r') as file1, open(input_file2, 'r') as file2:
+              content1 = file1.read()
+              content2 = file2.read()
+
+          with open(output_file, 'w') as output:
+              output.write(content1)
+              output.write(content2)
+        output_file_path =  r'$(System.DefaultWorkingDirectory)/TestResults.txt'
+
+        concatenate_files(test_summary, summary, output_file_path)
+
 
 
   - script: |
+      cat $(System.DefaultWorkingDirectory)/test_summary.jtl
+      echo "AiA"
       cat $(System.DefaultWorkingDirectory)/test_summary.jtl
     displayName: 'Explore results'
     
