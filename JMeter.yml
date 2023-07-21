@@ -54,10 +54,6 @@ jobs:
   - script: |
       $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.5/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
     displayName: 'Run JMeter Test'
-
-  - script: |
-      cat $(System.DefaultWorkingDirectory)/summary.txt
-    displayName: 'Read JMeter Test summary'
   - task: PythonScript@0
     inputs:
       scriptSource: 'inline'
@@ -116,14 +112,6 @@ jobs:
         output_file_path =  r'$(System.DefaultWorkingDirectory)/TestResults.txt'
 
         concatenate_files(test_summary, summary, output_file_path)
-
-
-
-  - script: |
-      cat $(System.DefaultWorkingDirectory)/test_summary.jtl
-      echo "AiA"
-      cat $(System.DefaultWorkingDirectory)/TestResults.txt
-    displayName: 'Explore results'
     
   - task: PublishPipelineArtifact@1
     inputs:
