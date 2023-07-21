@@ -109,7 +109,7 @@ jobs:
   - script: |
       cat $(System.DefaultWorkingDirectory)/test_summary.jtl
       echo "AiA"
-      cat $(System.DefaultWorkingDirectory)/test_summary.jtl
+      cat $(System.DefaultWorkingDirectory)/TestResults.txt
     displayName: 'Explore results'
     
   - task: PublishPipelineArtifact@1
