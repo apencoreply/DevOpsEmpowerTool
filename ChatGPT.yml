@@ -133,7 +133,7 @@ jobs:
         bot_token = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
         chat_id = '549538016'
         document_path = r'$(System.DefaultWorkingDirectory)/generatedText.md'
-        caption = 'Check out this document!'
+        caption = '${{ parameters.caption }}'
         
         api_url = f'https://api.telegram.org/bot{bot_token}/sendDocument'
         
