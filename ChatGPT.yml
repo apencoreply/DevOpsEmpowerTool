@@ -57,8 +57,8 @@ jobs:
         cat "$workingDir/*.cs"
         cat "$workingDir/*.cs" > "$(System.DefaultWorkingDirectory)/function_code.txt"
         echo "JTL Results:"
-        cat "$(System.DefaultWorkingDirectory)/test_summary.jtl"
-        cat "$(System.DefaultWorkingDirectory)/test_summary.jtl" > "$(System.DefaultWorkingDirectory)/jtl_results.txt"
+        cat "$(System.DefaultWorkingDirectory)/TestResults.txt"
+        cat "$(System.DefaultWorkingDirectory)/TestResults.txt" > "$(System.DefaultWorkingDirectory)/TestResults.txt"
 
   - task: PowerShell@2
     displayName: 'List contents of DefaultWorkingDirectory'
@@ -73,7 +73,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $jtlResultsFile = "$(System.DefaultWorkingDirectory)/jtl_results.txt"
+        $jtlResultsFile = "$(System.DefaultWorkingDirectory)/TestResults.txt"
         $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"
         $apiKey = "${{ parameters.apiKey }}"
         $apiUrl = "${{ parameters.apiUrl }}"
