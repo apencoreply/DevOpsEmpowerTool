@@ -134,7 +134,7 @@ jobs:
         import requests
         
         bot_token = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
-        chat_id = '549538016'
+        chat_id = '${{ parameters.chatid }}'
         document_path = r'$(System.DefaultWorkingDirectory)/generatedText.md'
         caption = '${{ parameters.caption }}'
         
