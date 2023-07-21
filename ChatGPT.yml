@@ -54,8 +54,8 @@ jobs:
       script: |
         $workingDir = "${{ parameters.workingDir }}"
         echo "Function Code:"
-        cat "$workingDir"/*.cs
-        cat "$workingDir"/*.cs > "$workingDir/function_code.txt"
+        cat "$workingDir/*.cs"
+        cat "$workingDir/*.cs" > "$(System.DefaultWorkingDirectory)/function_code.txt"
         echo "JTL Results:"
         cat "$(System.DefaultWorkingDirectory)/test_summary.jtl"
         cat "$(System.DefaultWorkingDirectory)/test_summary.jtl" > "$(System.DefaultWorkingDirectory)/jtl_results.txt"
