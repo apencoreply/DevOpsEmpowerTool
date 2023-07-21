@@ -36,6 +36,9 @@ parameters:
   - name: caption
     type: string
     default: 'Checkout our suggestions!'
+  - name: chatid
+    type: string
+    default: ''
 
 jobs:
 - job: Chat
