@@ -49,12 +49,10 @@ jobs:
     
   - task: PowerShell@2
     displayName: 'Prepare JTL Results and Function Code'
-    variables:
-      workingDir: ${{ parameters.workingDir }}
     inputs:
       targetType: 'inline'
       script: |
-        $workingDir = "$(workingDir)" # Retrieve the value saved in the variable
+        $workingDir = ${{ parameters.workingDir }}
         echo "Function Code:"
         cat "$workingDir"/*.cs
         cat "$workingDir"/*.cs > "$workingDir/function_code.txt"
