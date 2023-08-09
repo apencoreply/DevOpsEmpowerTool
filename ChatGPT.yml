@@ -8,7 +8,7 @@
 parameters:
   - name: tokens
     type: string
-    default: '1000'
+    default: '4000'
   - name: temperature
     type: string
     default: '0.7'
