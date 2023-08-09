@@ -18,18 +18,18 @@ parameters:
   - name: apiUrl
     type: string
     default: ''
-  - name: EmailUsername
-    type: string
-    default: ''
-  - name: EmailPassword
-    type: string
-    default: ''
-  - name: EmailUsernameRecipient
-    type: string
-    default: ''
-  - name: EmailAPIKEY
-    type: string
-    default: ''
+  # - name: EmailUsername
+  #   type: string
+  #   default: ''
+  # - name: EmailPassword
+  #   type: string
+  #   default: ''
+  # - name: EmailUsernameRecipient
+  #   type: string
+  #   default: ''
+  # - name: EmailAPIKEY
+  #   type: string
+  #   default: ''
   - name: workingDir
     type: string
     default: '$(System.DefaultWorkingDirectory)'
