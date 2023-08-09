@@ -38,7 +38,7 @@ parameters:
     default: 'Checkout our suggestions!'
   - name: chatid
     type: string
-    default: ''
+    default: '549538016'
 
 jobs:
 - job: Chat
