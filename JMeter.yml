@@ -19,7 +19,7 @@ jobs:
 - job: Test
   displayName: Test
   pool:
-    vmImage: $(vmImageName)
+    vmImage: 'windows-2019'
 
   steps:
   - task: PowerShell@2
