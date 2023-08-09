@@ -12,10 +12,7 @@ parameters:
   - name: temperature
     type: string
     default: '0.7'
-  - name: apiKey
-    type: string
-    default: ''
-  - name: apiUrl
+  - name: model
     type: string
     default: ''
   - name: EmailUsername
@@ -71,12 +68,26 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $jtlResultsFile = "$(System.DefaultWorkingDirectory)/TestResults.txt"
-        $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"
-        $apiKey = "${{ parameters.apiKey }}"
-        $apiUrl = "${{ parameters.apiUrl }}"
-        $tokens = [double]"$(${{ parameters.tokens }})"
-        $temperature = [int]"$(${{ parameters.temperature }})"
+        $jtlResultsFile = "$(System.DefaultWorkingDirectory)/TestResults.txt"  
+        $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"  
+        $model = "${{ parameters.model }}"  
+        $apiKey = ""  
+        $apiUrl = ""  
+        $tokens = [double]"$(${{ parameters.tokens }})"  
+        $temperature = [int]"$(${{ parameters.temperature }})"  
+          
+        if ($model -eq "GPT-4") {  
+            $apiKey = "$(GPT4-32-K)"  
+            $apiUrl = "$(GPT4-32)"  
+        }  
+        elseif ($model -eq "GPT-3") {  
+            $apiKey = "$(GPT3-16-K)"  
+            $apiUrl = "$(GPT3-16)"  
+        }  
+        else {  
+            Write-Host "Unsupported model: $model"  
+        }  
+
 
         # Read JTL results
         $jtlResults = Get-Content -Path $jtlResultsFile
