@@ -1,0 +1,233 @@
+<!DOCTYPE html>  
+<html> 
+<!-- 
+<head>  
+<style>  
+body {  
+  font-family: Arial, sans-serif;  
+}  
+  
+#usrform {  
+  width: 300px;  
+  margin: 0 auto;  
+}  
+  
+input[type="text"], select {  
+  width: 100%;  
+  padding: 12px 20px;  
+  margin: 8px 0;  
+  display: inline-block;  
+  border: 1px solid #ccc;  
+  border-radius: 4px;  
+  box-sizing: border-box;  
+}  
+  
+input[type="button"] {  
+  width: 100%;  
+  background-color: #4CAF50;  
+  color: white;  
+  padding: 14px 20px;  
+  margin: 8px 0;  
+  border: none;  
+  border-radius: 4px;  
+  cursor: pointer;  
+}  
+  
+input[type="button"]:hover {  
+  background-color: #45a049;  
+}  
+  
+#output {  
+  width: 300px;  
+  margin: 20px auto;  
+  padding: 20px;  
+  border: 1px solid #ccc;  
+  border-radius: 4px;  
+  box-sizing: border-box;
+  white-space: pre-wrap;
+}  
+</style>  
+</head>   
+-->
+<!DOCTYPE html>  
+<html>  
+<head>  
+<style>  
+body {  
+  font-family: Arial, sans-serif;  
+}  
+  
+form {  
+  display: flex;  
+  flex-wrap: wrap;  
+  justify-content: space-between;  
+}  
+  
+fieldset {  
+  flex: 0 0 30%; /* Each fieldset will take up roughly a third of the row */  
+  border: 1px solid #ccc;  
+  margin: 10px;  
+  padding: 10px;  
+}  
+  
+legend {  
+  padding: 0 10px;  
+}  
+  
+input[type="text"], select {  
+  width: 100%;  
+  padding: 12px 20px;  
+  margin: 8px 0;  
+  border: 1px solid #ccc;  
+  border-radius: 4px;  
+  box-sizing: border-box;  
+}  
+  
+input[type="button"] {  
+  width: 100%;  
+  background-color: #4CAF50;  
+  color: white;  
+  padding: 14px 20px;  
+  margin: 8px 0;  
+  border: none;  
+  border-radius: 4px;  
+  cursor: pointer;  
+}  
+  
+input[type="button"]:hover {  
+  background-color: #45a049;  
+}  
+  
+#output {  
+  width: 100%;  
+  margin: 20px 0;  
+  padding: 20px;  
+  border: 1px solid #ccc;  
+  border-radius: 4px;  
+  box-sizing: border-box;  
+  white-space: pre-wrap;  
+}  
+</style>  
+</head>  
+<body>  
+  
+<h2>OpenAI Configuration Form</h2>  
+  
+<form id="usrform">  
+  <fieldset>  
+    <legend>JMeter Configuration</legend>  
+    Threads: <input type="text" value="10" id="threads"><br>  
+    Rampup: <input type="text" value="1" id="rampup"><br>  
+    Loops: <input type="text" value="10" id="loops"><br>  
+  </fieldset>  
+  
+  <fieldset>  
+    <legend>OpenAI Configuration</legend>  
+    GPT Model:  
+    <select id="model">  
+      <option value="GPT4" selected>GPT-4</option>  
+      <option value="GPT3">GPT-3</option>  
+      <option value="DAVINCI">DaVinci</option>  
+    </select><br>  
+    Max Token: <input type="text" value="4000"  id="maxtoken"><br>  
+    Temperature: <input type="text" value="0.7" id="temperature"><br>  
+  </fieldset>  
+  
+  <fieldset>  
+    <legend>Pipeline Configuration</legend>  
+    Pipeline directory: <input type="text" value="$(System.DefaultWorkingDirectory)" id="workingDir"><br>  
+    Message caption: <input type="text" value="Checkout these suggestions!" id="caption"><br>  
+    chatid: <input type="text" value="549538016" id="chatid"><br>  
+  </fieldset>  
+  
+  <input type="button" value="Submit" onclick="submitForm()">  
+</form>  
+  
+<div id="output"></div>  
+<button onclick="copyToClipboard()">Copy Output</button>  
+<script>  
+function submitForm() {  
+  var threads = document.getElementById("threads").value;  
+  var rampup = document.getElementById("rampup").value;  
+  var loops = document.getElementById("loops").value;  
+  // var method = document.getElementById("method").value;  
+  // var https = document.getElementById("https").value;  
+  // var url = document.getElementById("url").value;  
+  // var port = document.getElementById("port").value;  
+  var model = document.getElementById("model").value;  
+  var maxtoken = document.getElementById("maxtoken").value;  
+  var temperature = document.getElementById("temperature").value;
+  var caption = document.getElementById("caption").value;  
+  var chatid = document.getElementById("chatid").value;  
+  var workingDir = document.getElementById("workingDir").value; 
+  var output = document.getElementById("output");  
+
+  /*
+        method: \'${method}\'
+        protocol: \'${https.toUpperCase()}\'
+        url: \'${url}\'
+        port: \'${port}\'
+
+        $(workingDirectory)  
+        "GetWebAPI message"  
+        "549538016"  
+  */
+  
+  let script = `- stage: JMeterTest  
+  condition: always()
+  displayName: JMeter Test stage  
+  jobs:  
+  - template: JMeter.yml@templates  
+    parameters:  
+      threads: \'${threads}\'  
+      rampup: \'${rampup}\'    
+      loops: \'${loops}\'
+  
+  
+- stage: ChatGPT
+  condition: always()
+  displayName: ChatGPT stage
+  jobs:  
+  - template: ChatGPT.yml@templates  
+    parameters:  
+      tokens: \'${maxtoken}\'  
+      temperature: \'${temperature}\'  
+      model: \'${model}\'
+      workingDir: $(workingDirectory)
+      caption: \'${caption}\'  
+      chatid: \'${chatid}\'
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: apencoreply/DevOpsEmpowerTool
+      endpoint: devopsempowertool
+
+variables:
+  # Azure Resource Manager connection created during pipeline creation
+  azureSubscription: 'SCPenco'
+
+  # Working Directory
+  workingDirectory: ${workingDir}
+`;  
+  
+console.log(script);  
+document.getElementById('output').textContent = script;  
+}  
+  
+function copyToClipboard() {  
+  var output = document.getElementById("output");  
+  var outputText = output.innerText;  
+  var textarea = document.createElement("textarea");  
+  textarea.textContent = outputText;  
+  document.body.appendChild(textarea);  
+  textarea.select();  
+  document.execCommand("copy");  
+  document.body.removeChild(textarea);  
+  alert("Output copied to clipboard!");  
+}  
+</script>  
+  
+</body>  
+</html>  
