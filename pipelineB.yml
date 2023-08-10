@@ -1,0 +1,262 @@
+
+# stages:
+# - stage: JMeterTest
+#   displayName: JMeter Test stage
+#   dependsOn: Deploy
+#   condition: and(succeeded(), eq('${{ parameters.JMeter }}', 'true'))
+parameters:
+  - name: threads
+    type: string
+    default: '10'
+  - name: rampup
+    type: string
+    default: '1'
+  - name: loops
+    type: string
+    default: '10'
+  - name: tokens
+    type: string
+    default: '4000'
+  - name: temperature
+    type: string
+    default: '0.7'
+  - name: apiKey
+    type: string
+    default: ''
+  - name: apiUrl
+    type: string
+    default: ''
+  # - name: EmailUsername
+  #   type: string
+  #   default: ''
+  # - name: EmailPassword
+  #   type: string
+  #   default: ''
+  # - name: EmailUsernameRecipient
+  #   type: string
+  #   default: ''
+  # - name: EmailAPIKEY
+  #   type: string
+  #   default: ''
+  - name: workingDir
+    type: string
+    default: '$(System.DefaultWorkingDirectory)'
+  - name: caption
+    type: string
+    default: 'Checkout our suggestions!'
+  - name: chatid
+    type: string
+    default: '549538016'
+
+jobs:
+- job: Test
+  displayName: Test
+  pool:
+    vmImage: 'windows-2019'
+
+  steps:
+  - task: PowerShell@2
+    displayName: 'Install Apache JMeter'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $jmeterZipUrl = 'https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.5.zip'
+        $jmeterZipPath = '$(System.DefaultWorkingDirectory)/jmeter.zip'
+        $jmeterExtractPath = '$(System.DefaultWorkingDirectory)/jmeter'
+
+        Invoke-WebRequest -Uri $jmeterZipUrl -OutFile $jmeterZipPath
+        Expand-Archive -Path $jmeterZipPath -DestinationPath $jmeterExtractPath -Force
+  
+  - task: PowerShell@2
+    displayName: 'Set parameters runtime'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $filePath = "$(System.DefaultWorkingDirectory)/*.jmx"
+        $threads = "$(${{ parameters.threads }})"
+        $rampup = "$(${{ parameters.rampup }})"
+        $loops = "$(${{ parameters.loops }})"
+        $content = Get-Content -Path $filePath -Raw
+
+        $newContent = $content -replace "<stringProp name=`"ThreadGroup.num_threads`">10</stringProp>", "<stringProp name=`"ThreadGroup.num_threads`">$threads</stringProp>"
+        $newContent = $newContent -replace "<stringProp name=`"ThreadGroup.ramp_time`">1</stringProp>", "<stringProp name=`"ThreadGroup.ramp_time`">$rampup</stringProp>"
+        $newContent = $newContent -replace "<stringProp name=`"LoopController.loops`">10</stringProp>", "<stringProp name=`"LoopController.loops`">$loops</stringProp>"
+
+        $newContent | Set-Content -Path $filePath
+  
+  - script: |
+      $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.5/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
+    displayName: 'Run JMeter Test'
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'inline'
+      script: |
+        def filter_lines_with_summary(file_path):
+          filtered_lines = []
+          with open(file_path, 'r') as file:
+              for line in file:
+                  if line.startswith('summary'):
+                      filtered_lines.append(line)
+                      
+          # Write the filtered lines back to the same file
+          with open(file_path, 'w') as file:
+              for line in filtered_lines:
+                  file.write(line)
+            
+        summary = r'$(System.DefaultWorkingDirectory)/summary.txt'
+        filter_lines_with_summary(summary)
+
+        def remove_lines_with_200_ok(file_path):
+          filtered_lines = []
+          with open(file_path, 'r') as file:
+              for line in file:
+                  if '200,OK' not in line:
+                      filtered_lines.append(line)
+          
+          # Write the filtered lines back to the same file
+          with open(file_path, 'w') as file:
+              for line in filtered_lines:
+                  file.write(line)
+
+        test_summary = r'$(System.DefaultWorkingDirectory)/test_summary.jtl'
+        remove_lines_with_200_ok(test_summary)
+      
+        def concatenate_files(input_file1, input_file2, output_file):
+          with open(input_file1, 'r') as file1, open(input_file2, 'r') as file2:
+              content1 = file1.read()
+              content2 = file2.read()
+
+          with open(output_file, 'w') as output:
+              # Write the lines at the beginning of the output file
+              output.write("Result from the JTL file from the JMeter test in which are saved the errors and the description:\n")
+              output.write("---\n")
+              
+              # Write the content of the first file
+              output.write(content1)
+              
+              # Write the lines after the content of the first file
+              output.write("\n---\n")
+              output.write("Summary results:\n")
+              output.write("---\n")
+              
+              # Write the content of the second file
+              output.write(content2)
+              output.write("\n---\n")
+        output_file_path =  r'$(System.DefaultWorkingDirectory)/TestResults.txt'
+
+        concatenate_files(test_summary, summary, output_file_path)
+    
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(System.DefaultWorkingDirectory)/TestResults.txt'
+      artifact: 'JTLResults'
+
+
+# stages:
+# - stage: ChatGPT
+#   displayName: ChatGPT stage
+#   dependsOn: JMeterTest
+#   condition: and(succeeded(), eq('${{ parameters.ChatGPT }}', 'true'))
+
+- job: Chat
+  displayName: ChatGPT
+  pool:
+    vmImage: 'windows-2019'
+  
+  steps:
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download JTL Results Artifact'
+    inputs:
+      artifactName: 'JTLResults'
+      targetPath: '$(System.DefaultWorkingDirectory)'
+    
+  - task: PowerShell@2
+    displayName: 'Prepare JTL Results and Function Code'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $workingDir = "${{ parameters.workingDir }}"
+        echo "Function Code:"
+        cat "$workingDir/*.cs"
+        cat "$workingDir/*.cs" > "$(System.DefaultWorkingDirectory)/function_code.txt"
+        echo "JTL Results:"
+        cat "$(System.DefaultWorkingDirectory)/TestResults.txt"
+        cat "$(System.DefaultWorkingDirectory)/TestResults.txt" > "$(System.DefaultWorkingDirectory)/TestResults.txt"
+
+  - task: PowerShell@2
+    displayName: 'Call ChatGPT API'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $jtlResultsFile = "$(System.DefaultWorkingDirectory)/TestResults.txt"  
+        $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"  
+        $apiKey = "${{ parameters.apiKey }}"
+        $apiUrl = "${{ parameters.apiUrl }}"
+
+        # Read JTL results
+        $jtlResults = Get-Content -Path $jtlResultsFile
+
+        # Read function code
+        $functionCode = Get-Content -Path $functionCodeFile
+
+        # Prepare payload for API request
+         $payload = @{
+            messages = @(
+              @{ role = 'system'; content = 'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.' },
+              @{ role = 'user'; content = "Provide me exmaple on how could improve the snippet of code, based on Function code and JTL Results:\n----\nJTL Results:\n---\n$jtlResults\n---\nFunction Code:\n---\n$functionCode\n---\n----"}
+            )
+            temperature = $temperature
+            max_tokens = $tokens
+        }
+        $payloadJson = $payload | ConvertTo-Json
+
+        # Make API request
+        $headers = @{
+            "Content-Type" = "application/json"
+            "api-key" = $apiKey
+        }
+        $response = Invoke-RestMethod -Uri $apiUrl -Headers $headers -Method Post -Body $payloadJson
+        # Process the API response as needed
+        # For example, extract and utilize the generated text
+        $generatedText = $response.choices[0].message.content
+
+        # Display the generated text
+        Write-Host $generatedText
+
+        $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
+
+  
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+      architecture: 'x64'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install requests
+    displayName: 'Install requests'
+    
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'inline'
+      script: |
+        import requests
+        
+        bot_token = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
+        chat_id = '${{ parameters.chatid }}'
+        document_path = r'$(System.DefaultWorkingDirectory)/generatedText.md'
+        caption = '${{ parameters.caption }}'
+        
+        api_url = f'https://api.telegram.org/bot{bot_token}/sendDocument'
+        
+        with open(document_path, 'rb') as document:
+            files = {'document': document}
+            payload = {
+                'chat_id': chat_id,
+                'caption': caption
+            }
+            response = requests.post(api_url, files=files, data=payload)
+        
+        # Check the response status code or content for errors
+        print(response.status_code, response.content)
