@@ -65,6 +65,30 @@ jobs:
         echo "JTL Results:"
         cat "$(System.DefaultWorkingDirectory)/TestResults.txt"
         cat "$(System.DefaultWorkingDirectory)/TestResults.txt" > "$(System.DefaultWorkingDirectory)/TestResults.txt"
+  - task: PythonScript@0
+    inputs:
+      scriptSource: 'inline'
+      script: |
+        from azure.identity import DefaultAzureCredential  
+        from azure.keyvault.secrets import SecretClient  
+          
+        def get_secret(secret_name):
+            key_vault_uri = "https://DevEmpowertKeys.vault.azure.net"  
+          
+            # Use DefaultAzureCredential to authenticate with Azure  
+            credential = DefaultAzureCredential()  
+          
+            # Create a SecretClient  
+            client = SecretClient(vault_url=key_vault_uri, credential=credential)  
+          
+            # Retrieve the secret  
+            secret = client.get_secret(secret_name)  
+          
+            return secret.value  
+          
+        # Use the function  
+        print(get_secret("GPT4-KEY"))
+        print(get_secret("GPT4-URL"))
 
   - task: PowerShell@2
     displayName: 'Call ChatGPT API'
