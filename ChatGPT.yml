@@ -86,7 +86,7 @@ jobs:
         from azure.keyvault.secrets import SecretClient  
           
         def get_secret(secret_name):
-            key_vault_uri = "https://DevEmpowertKeys.vault.azure.net"  
+            key_vault_uri = "https://DevEmpowerVault.vault.azure.net"  
           
             # Use DefaultAzureCredential to authenticate with Azure  
             credential = DefaultAzureCredential()  
