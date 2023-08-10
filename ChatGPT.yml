@@ -66,41 +66,12 @@ jobs:
         cat "$(System.DefaultWorkingDirectory)/TestResults.txt"
         cat "$(System.DefaultWorkingDirectory)/TestResults.txt" > "$(System.DefaultWorkingDirectory)/TestResults.txt"
 
-  - task: UsePythonVersion@0
+  - task: AzureKeyVault@2
     inputs:
-      versionSpec: '3.x'
-      addToPath: true
-      architecture: 'x64'
-
-  - script: |
-      python -m pip install --upgrade pip
-      pip install requests
-      pip install azure-keyvault-secrets azure-identity
-    displayName: 'Install requests'
-  - task: PythonScript@0
-    inputs:
-      scriptSource: 'inline'
-      script: |
-        from azure.identity import DefaultAzureCredential  
-        from azure.keyvault.secrets import SecretClient  
-          
-        def get_secret(secret_name):
-            key_vault_uri = "https://DevEmpowerVault.vault.azure.net"  
-          
-            # Use DefaultAzureCredential to authenticate with Azure  
-            credential = DefaultAzureCredential()  
-          
-            # Create a SecretClient  
-            client = SecretClient(vault_url=key_vault_uri, credential=credential)  
-          
-            # Retrieve the secret  
-            secret = client.get_secret(secret_name)  
-          
-            return secret.value  
-          
-        # Use the function  
-        print(get_secret("GPT4-KEY"))
-        print(get_secret("GPT4-URL"))
+      azureSubscription: 'SCPenco'
+      KeyVaultName: 'DevEmpower'
+      SecretsFilter: 'GPT4-KEY, GPT4-URL'
+      RunAsPreJob: false
 
   - task: PowerShell@2
     displayName: 'Call ChatGPT API'
@@ -109,8 +80,8 @@ jobs:
       script: |
         $jtlResultsFile = "$(System.DefaultWorkingDirectory)/TestResults.txt"  
         $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"  
-        $apiKey = "${{ parameters.apiKey }}"
-        $apiUrl = "${{ parameters.apiUrl }}"
+        $apiKey = "$(GPT4-KEY)"
+        $apiUrl = "$(GPT4-URL)"
 
         # Read JTL results
         $jtlResults = Get-Content -Path $jtlResultsFile
@@ -144,6 +115,17 @@ jobs:
 
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
     
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+      architecture: 'x64'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install requests
+    displayName: 'Install requests'
   - task: PythonScript@0
     inputs:
       scriptSource: 'inline'
