@@ -159,6 +159,7 @@ jobs:
 #   condition: and(succeeded(), eq('${{ parameters.ChatGPT }}', 'true'))
 
 - job: Chat
+  dependsOn: Test
   displayName: ChatGPT
   pool:
     vmImage: 'windows-2019'
