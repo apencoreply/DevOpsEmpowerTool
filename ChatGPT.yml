@@ -70,7 +70,7 @@ jobs:
     inputs:
       azureSubscription: 'SCPenco'
       KeyVaultName: 'DevEmpower'
-      SecretsFilter: 'GPT4-KEY, GPT4-URL'
+      SecretsFilter: 'GPT4-KEY,GPT4-URL'
       RunAsPreJob: false
 
   - task: PowerShell@2
