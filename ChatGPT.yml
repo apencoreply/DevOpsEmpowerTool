@@ -65,6 +65,19 @@ jobs:
         echo "JTL Results:"
         cat "$(System.DefaultWorkingDirectory)/TestResults.txt"
         cat "$(System.DefaultWorkingDirectory)/TestResults.txt" > "$(System.DefaultWorkingDirectory)/TestResults.txt"
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+      architecture: 'x64'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install requests
+      pip install azure.identity
+      pip install azure.keyvault.secrets
+    displayName: 'Install requests'
   - task: PythonScript@0
     inputs:
       scriptSource: 'inline'
@@ -131,18 +144,6 @@ jobs:
         Write-Host $generatedText
 
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
-
-  
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.x'
-      addToPath: true
-      architecture: 'x64'
-
-  - script: |
-      python -m pip install --upgrade pip
-      pip install requests
-    displayName: 'Install requests'
     
   - task: PythonScript@0
     inputs:
