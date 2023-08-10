@@ -83,8 +83,8 @@ jobs:
       script: |
         $jtlResultsFile = "$(System.DefaultWorkingDirectory)/TestResults.txt"  
         $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"  
-        $apiKey = "$(parameters.model)-KEY"
-        $apiUrl = "$(parameters.model)-URL"
+        $apiKey = "$(${{ parameters.model }}-KEY)"
+        $apiUrl = "$(${{ parameters.model }}-URL)"
 
         # Read JTL results
         $jtlResults = Get-Content -Path $jtlResultsFile
