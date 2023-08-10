@@ -8,28 +8,31 @@
 parameters:
   - name: tokens
     type: string
-    default: '1000'
+    default: '4000'
   - name: temperature
     type: string
     default: '0.7'
-  - name: apiKey
+  - name: model
     type: string
-    default: ''
-  - name: apiUrl
-    type: string
-    default: ''
-  - name: EmailUsername
-    type: string
-    default: ''
-  - name: EmailPassword
-    type: string
-    default: ''
-  - name: EmailUsernameRecipient
-    type: string
-    default: ''
-  - name: EmailAPIKEY
-    type: string
-    default: ''
+    default: 'GPT4'
+  # - name: apiKey
+  #   type: string
+  #   default: ''
+  # - name: apiUrl
+  #   type: string
+  #   default: ''
+  # - name: EmailUsername
+  #   type: string
+  #   default: ''
+  # - name: EmailPassword
+  #   type: string
+  #   default: ''
+  # - name: EmailUsernameRecipient
+  #   type: string
+  #   default: ''
+  # - name: EmailAPIKEY
+  #   type: string
+  #   default: ''
   - name: workingDir
     type: string
     default: '$(System.DefaultWorkingDirectory)'
@@ -38,13 +41,13 @@ parameters:
     default: 'Checkout our suggestions!'
   - name: chatid
     type: string
-    default: ''
+    default: '549538016'
 
 jobs:
 - job: Chat
   displayName: ChatGPT
   pool:
-    vmImage: $(vmImageName)
+    vmImage: 'windows-2019'
   
   steps:
   - task: DownloadPipelineArtifact@2
@@ -66,25 +69,22 @@ jobs:
         cat "$(System.DefaultWorkingDirectory)/TestResults.txt"
         cat "$(System.DefaultWorkingDirectory)/TestResults.txt" > "$(System.DefaultWorkingDirectory)/TestResults.txt"
 
-  - task: PowerShell@2
-    displayName: 'List contents of DefaultWorkingDirectory'
+  - task: AzureKeyVault@2
     inputs:
-      targetType: 'inline'
-      script: |
-        $directory = "$(System.DefaultWorkingDirectory)"
-        Get-ChildItem -Path $directory
+      azureSubscription: 'SCPenco'
+      KeyVaultName: 'DevEmpower'
+      SecretsFilter: '${{ parameters.model }}-KEY,${{ parameters.model }}-URL'
+      RunAsPreJob: false
 
   - task: PowerShell@2
     displayName: 'Call ChatGPT API'
     inputs:
       targetType: 'inline'
       script: |
-        $jtlResultsFile = "$(System.DefaultWorkingDirectory)/TestResults.txt"
-        $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"
-        $apiKey = "${{ parameters.apiKey }}"
-        $apiUrl = "${{ parameters.apiUrl }}"
-        $tokens = [double]"$(${{ parameters.tokens }})"
-        $temperature = [int]"$(${{ parameters.temperature }})"
+        $jtlResultsFile = "$(System.DefaultWorkingDirectory)/TestResults.txt"  
+        $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"  
+        $apiKey = "$(${{ parameters.model }}-KEY)"
+        $apiUrl = "$(${{ parameters.model }}-URL)"
 
         # Read JTL results
         $jtlResults = Get-Content -Path $jtlResultsFile
@@ -117,8 +117,8 @@ jobs:
         Write-Host $generatedText
 
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
+    
 
-  
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.x'
@@ -129,7 +129,6 @@ jobs:
       python -m pip install --upgrade pip
       pip install requests
     displayName: 'Install requests'
-    
   - task: PythonScript@0
     inputs:
       scriptSource: 'inline'
