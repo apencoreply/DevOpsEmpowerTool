@@ -12,12 +12,15 @@ parameters:
   - name: temperature
     type: string
     default: '0.7'
-  - name: apiKey
+  - name: model
     type: string
-    default: ''
-  - name: apiUrl
-    type: string
-    default: ''
+    default: 'GPT4'
+  # - name: apiKey
+  #   type: string
+  #   default: ''
+  # - name: apiUrl
+  #   type: string
+  #   default: ''
   # - name: EmailUsername
   #   type: string
   #   default: ''
@@ -70,7 +73,7 @@ jobs:
     inputs:
       azureSubscription: 'SCPenco'
       KeyVaultName: 'DevEmpower'
-      SecretsFilter: 'GPT4-KEY,GPT4-URL'
+      SecretsFilter: '${{ parameters.model }}-KEY,${{ parameters.model }}-URL'
       RunAsPreJob: false
 
   - task: PowerShell@2
