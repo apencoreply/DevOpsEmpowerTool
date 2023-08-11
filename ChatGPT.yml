@@ -44,8 +44,8 @@ parameters:
     default: '549538016'
 
 jobs:
-- job: Chat
-  displayName: ChatGPT
+- job: OpenAi
+  displayName: OpenAi
   pool:
     vmImage: 'windows-2019'
   
