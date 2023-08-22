@@ -42,6 +42,10 @@ parameters:
   - name: chatid
     type: string
     default: '549538016'
+  - name: azureSubscription
+    type: string
+    default: ''
+    
 
 jobs:
 - job: OpenAi
@@ -71,7 +75,7 @@ jobs:
 
   - task: AzureKeyVault@2
     inputs:
-      azureSubscription: 'SCPenco'
+      azureSubscription: '${{ parameters.azureSubscription }}'
       KeyVaultName: 'DevEmpower'
       SecretsFilter: '${{ parameters.model }}-KEY,${{ parameters.model }}-URL'
       RunAsPreJob: false
