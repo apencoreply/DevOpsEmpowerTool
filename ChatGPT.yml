@@ -42,7 +42,7 @@ parameters:
   - name: chatid
     type: string
     default: '549538016'
-  - name: azureSubscription
+  - name: azSubscription
     type: string
     default: ''
     
@@ -75,7 +75,7 @@ jobs:
 
   - task: AzureKeyVault@2
     inputs:
-      azureSubscription: '${{ parameters.azureSubscription }}'
+      azureSubscription: '${{ parameters.azSubscription }}'
       KeyVaultName: 'DevEmpower'
       SecretsFilter: '${{ parameters.model }}-KEY,${{ parameters.model }}-URL'
       RunAsPreJob: false
