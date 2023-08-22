@@ -1,55 +1,4 @@
 <!DOCTYPE html>  
-<html> 
-<!-- 
-<head>  
-<style>  
-body {  
-  font-family: Arial, sans-serif;  
-}  
-  
-#usrform {  
-  width: 300px;  
-  margin: 0 auto;  
-}  
-  
-input[type="text"], select {  
-  width: 100%;  
-  padding: 12px 20px;  
-  margin: 8px 0;  
-  display: inline-block;  
-  border: 1px solid #ccc;  
-  border-radius: 4px;  
-  box-sizing: border-box;  
-}  
-  
-input[type="button"] {  
-  width: 100%;  
-  background-color: #4CAF50;  
-  color: white;  
-  padding: 14px 20px;  
-  margin: 8px 0;  
-  border: none;  
-  border-radius: 4px;  
-  cursor: pointer;  
-}  
-  
-input[type="button"]:hover {  
-  background-color: #45a049;  
-}  
-  
-#output {  
-  width: 300px;  
-  margin: 20px auto;  
-  padding: 20px;  
-  border: 1px solid #ccc;  
-  border-radius: 4px;  
-  box-sizing: border-box;
-  white-space: pre-wrap;
-}  
-</style>  
-</head>   
--->
-<!DOCTYPE html>  
 <html>  
 <head>  
 <style>  
@@ -75,6 +24,14 @@ legend {
 }  
   
 input[type="text"], select {  
+  width: 100%;  
+  padding: 12px 20px;  
+  margin: 8px 0;  
+  border: 1px solid #ccc;  
+  border-radius: 4px;  
+  box-sizing: border-box;  
+}  
+input[type="number"], select {  
   width: 100%;  
   padding: 12px 20px;  
   margin: 8px 0;  
@@ -111,31 +68,33 @@ input[type="button"]:hover {
 </head>  
 <body>  
   
-<h2>OpenAI Configuration Form</h2>  
+<h2>Script Generator Form</h2>  
   
 <form id="usrform">  
   <fieldset>  
     <legend>JMeter Configuration</legend>  
-    Threads: <input type="text" value="10" id="threads"><br>  
-    Rampup: <input type="text" value="1" id="rampup"><br>  
-    Loops: <input type="text" value="10" id="loops"><br>  
+    Threads: <input type="number" value="10" id="threads" min="1" step="1" onchange="validateInput('threads', 1, 10000)"><br>  
+    Rampup: <input type="number" value="1" id="rampup" min="1" step="1" onchange="validateInput('rampup', 1, 10)"><br>  
+    Loops: <input type="number" value="10" id="loops" min="1" step="1" onchange="validateInput('loops', 1, 1000)"><br>  
   </fieldset>  
   
   <fieldset>  
     <legend>OpenAI Configuration</legend>  
     GPT Model:  
-    <select id="model">  
+    <select id="model" onchange="updateMaxToken()">  
       <option value="GPT4" selected>GPT-4</option>  
       <option value="GPT3">GPT-3</option>  
       <option value="DAVINCI">DaVinci</option>  
     </select><br>  
-    Max Token: <input type="text" value="4000"  id="maxtoken"><br>  
-    Temperature: <input type="text" value="0.7" id="temperature"><br>  
+    Max Token: <input type="number" value="4000"  id="maxtoken" min="1000" max="20000" step="1" onchange="validateInput('maxtoken', 1, 20000)"><br>  
+    Temperature: <input type="number" value="0.7" id="temperature" min="0" max="1" step="0.01" onchange="validateInput('temperature', 0, 1)"><br>  
   </fieldset>  
   
   <fieldset>  
     <legend>Pipeline Configuration</legend>  
-    Pipeline directory: <input type="text" value="$(System.DefaultWorkingDirectory)" id="workingDir"><br>  
+    <!-- Pipeline directory: <input type="text" value="$(System.DefaultWorkingDirectory)" id="workingDir"><br>   -->
+    Root Directory: <input type="text" value="$(System.DefaultWorkingDirectory)" id="rootDir" readonly><br>  
+    Working Directory: <input type="text" id="workingDir" value="/"><br> 
     Message caption: <input type="text" value="Checkout these suggestions!" id="caption"><br>  
     chatid: <input type="text" value="549538016" id="chatid"><br>  
   </fieldset>  
@@ -159,19 +118,13 @@ function submitForm() {
   var temperature = document.getElementById("temperature").value;
   var caption = document.getElementById("caption").value;  
   var chatid = document.getElementById("chatid").value;  
-  var workingDir = document.getElementById("workingDir").value; 
+  var rootDir = document.getElementById("rootDir").value;    
+  var workingDir = document.getElementById("workingDir").value;   
+  var fullWorkingDir = rootDir; 
+  if (workingDir.trim() !== '' && workingDir.trim() !== '/') {  
+    fullWorkingDir += workingDir;  
+  }  
   var output = document.getElementById("output");  
-
-  /*
-        method: \'${method}\'
-        protocol: \'${https.toUpperCase()}\'
-        url: \'${url}\'
-        port: \'${port}\'
-
-        $(workingDirectory)  
-        "GetWebAPI message"  
-        "549538016"  
-  */
   
   let script = `- stage: JMeterTest  
   condition: always()
@@ -209,7 +162,7 @@ variables:
   azureSubscription: 'SCPenco'
 
   # Working Directory
-  workingDirectory: ${workingDir}
+  workingDirectory: ${fullWorkingDir}
 `;  
   
 console.log(script);  
@@ -226,6 +179,29 @@ function copyToClipboard() {
   document.execCommand("copy");  
   document.body.removeChild(textarea);  
   alert("Output copied to clipboard!");  
+}  
+
+function updateMaxToken() {  
+  var model = document.getElementById('model').value;  
+  var maxtoken = document.getElementById('maxtoken');  
+  if (model === 'GPT4') {  
+    maxtoken.max = '20000';  
+  } else {  
+    maxtoken.max = '4000';  
+  }  
+} 
+function validateInput(id, min, max) {  
+  var input = document.getElementById(id);
+  if (id !== 'temperature') {  
+    input.value = Math.round(input.value);  
+  }
+  if (parseInt(input.value) > max) {  
+    alert('The value cannot exceed ' + max);  
+    input.value = max;  
+  } else if (parseInt(input.value) < min) {  
+    alert('The value cannot be less than ' + min);  
+    input.value = min;  
+  }
 }  
 </script>  
   
