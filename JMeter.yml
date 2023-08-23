@@ -119,7 +119,6 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        $workingDir = "${{ parameters.workingDir }}"
         echo "JMX file:"
         cat "$(System.DefaultWorkingDirectory)/*.jmx"
   - task: PublishPipelineArtifact@1
