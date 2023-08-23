@@ -112,15 +112,7 @@ jobs:
         output_file_path =  r'$(System.DefaultWorkingDirectory)/TestResults.txt'
 
         concatenate_files(test_summary, summary, output_file_path)
-    
 
-  - task: PowerShell@2
-    displayName: 'Prepare JTL Results and Function Code'
-    inputs:
-      targetType: 'inline'
-      script: |
-        echo "JMX file:"
-        cat "$(System.DefaultWorkingDirectory)/*.jmx"
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: '$(System.DefaultWorkingDirectory)/TestResults.txt'
