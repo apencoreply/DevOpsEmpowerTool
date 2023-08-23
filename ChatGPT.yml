@@ -149,13 +149,14 @@ jobs:
         
         api_url = f'https://api.telegram.org/bot{bot_token}/sendDocument'
         
-        with open(document_path, 'rb') as document:
-            files = {'document': document}
-            payload = {
-                'chat_id': chat_id,
-                'caption': caption
-            }
-            response = requests.post(api_url, files=files, data=payload)
+        for document_path in document_paths:
+          with open(document_path, 'rb') as document:
+              files = {'document': document}
+              payload = {
+                  'chat_id': chat_id,
+                  'caption': caption
+              }
+              response = requests.post(api_url, files=files, data=payload)
         
         # Check the response status code or content for errors
         print(response.status_code, response.content)
