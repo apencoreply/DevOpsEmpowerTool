@@ -107,7 +107,7 @@ jobs:
               "---",  
               "Function Code:",  
               "---",  
-              "$functionCodeFile",
+              "$functionCode",
               "---",  
               "----"  
             ) -join "`n"
