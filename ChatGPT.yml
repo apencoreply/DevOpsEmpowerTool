@@ -103,11 +103,11 @@ jobs:
               "----",  
               "JTL Results:",  
               "---",  
-              "$(Get-Content -Path $jtlResults)",  
+              $jtlResults,
               "---",  
               "Function Code:",  
               "---",  
-              "$(Get-Content -Path $functionCodeFile)",  
+              $functionCodeFile,
               "---",  
               "----"  
             ) -join "`n"
