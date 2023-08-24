@@ -103,11 +103,11 @@ jobs:
               "----",  
               "JTL Results:",  
               "---",  
-              $jtlResults,
+              "$jtlResults",
               "---",  
               "Function Code:",  
               "---",  
-              $functionCodeFile,
+              "$functionCodeFile",
               "---",  
               "----"  
             ) -join "`n"
