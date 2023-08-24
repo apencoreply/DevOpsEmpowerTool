@@ -98,7 +98,19 @@ jobs:
         $payload = @{
           messages = @(
             @{ role = 'system'; content = 'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.' },
-            @{ role = 'user'; content = r"Provide me exmaple on how could improve the snippet of code, based on Function code and JTL Results:\n----\nJTL Results:\n---\n$jtlResults\n---\nFunction Code:\n---\n$functionCode\n---\n----"
+            @{ role = 'user'; content = (  
+              "Provide me example on how could improve the snippet of code, based on Function code and JTL Results:",  
+              "----",  
+              "JTL Results:",  
+              "---",  
+              "$(Get-Content -Path $jtlResults)",  
+              "---",  
+              "Function Code:",  
+              "---",  
+              "$(Get-Content -Path $functionCodeFile)",  
+              "---",  
+              "----"  
+            ) -join "`n"
             }
           )
           temperature = $temperature
