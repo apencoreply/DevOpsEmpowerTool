@@ -99,7 +99,20 @@ jobs:
          $payload = @{
             messages = @(
               @{ role = 'system'; content = 'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.' },
-              @{ role = 'user'; content = "Provide me exmaple on how could improve the snippet of code, based on Function code and JTL Results:\n----\nJTL Results:\n---\n$jtlResults\n---\nFunction Code:\n---\n$functionCode\n---\n----"}
+              @{ role = 'user'; content = @'
+                                          Provide me exmaple on how could improve the snippet of code, based on Function code and JTL Results:
+                                          ----
+                                          JTL Results:
+                                          ---
+                                          $jtlResults
+                                          ---
+                                          Function Code:
+                                          ---
+                                          $functionCode
+                                          ---
+                                          ----
+                                          '@
+              }
             )
             temperature = $temperature
             max_tokens = $tokens
