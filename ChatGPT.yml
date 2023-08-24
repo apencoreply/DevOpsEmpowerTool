@@ -78,7 +78,6 @@ jobs:
       SecretsFilter: '${{ parameters.model }}-KEY,${{ parameters.model }}-URL'
       RunAsPreJob: false
 
-        # $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"  
   - task: PowerShell@2
     displayName: 'Call ChatGPT API'
     inputs:
@@ -107,7 +106,14 @@ jobs:
                     $functionCode
                     ---
                     ----
-                    "@
+                    @"
+
+        $multiLineVar = @"  
+                        line1  
+                        line2  
+                        line3  
+                        "@  
+                        Write-Host "##vso[task.setvariable variable=multiLineVar;isOutput=true]$multiLineVar"  
 
         # Prepare payload for API request
         $payload = @{
