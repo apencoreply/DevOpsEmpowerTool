@@ -95,23 +95,25 @@ jobs:
         # Read function code
         $functionCode = Get-Content -Path $functionCodeFile
 
+        $content =  @"
+                    Provide me exmaple on how could improve the snippet of code, based on Function code and JTL Results:
+                    ----
+                    JTL Results:
+                    ---
+                    $jtlResults
+                    ---
+                    Function Code:
+                    ---
+                    $functionCode
+                    ---
+                    ----
+                    "@
+
         # Prepare payload for API request
         $payload = @{
           messages = @(
             @{ role = 'system'; content = 'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.' },
-            @{ role = 'user'; content = @"
-                                        Provide me exmaple on how could improve the snippet of code, based on Function code and JTL Results:
-                                        ----
-                                        JTL Results:
-                                        ---
-                                        $jtlResults
-                                        ---
-                                        Function Code:
-                                        ---
-                                        $functionCode
-                                        ---
-                                        ----
-                                        "@
+            @{ role = 'user'; content = $content
             }
           )
           temperature = $temperature
