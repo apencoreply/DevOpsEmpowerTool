@@ -134,7 +134,7 @@ jobs:
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
 
         # Save the user content to a file  
-        $payload.messages[1].content | Out-File "$(System.DefaultWorkingDirectory)/userContent.md" -Encoding utf8
+        $payload.messages[1].content | Out-File "$(System.DefaultWorkingDirectory)/userContent.txt" -Encoding utf8
     
 
   - task: UsePythonVersion@0
@@ -156,7 +156,7 @@ jobs:
         bot_token = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
         chat_id = '${{ parameters.chatid }}'
         document_paths = [r'$(System.DefaultWorkingDirectory)/generatedText.md',
-                         r'$(System.DefaultWorkingDirectory)/userContent.md']
+                         r'$(System.DefaultWorkingDirectory)/userContent.txt']
         caption = '${{ parameters.caption }}'
         
         api_url = f'https://api.telegram.org/bot{bot_token}/sendDocument'
