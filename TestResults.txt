@@ -1,0 +1,12 @@
+Result from the JTL file from the JMeter test in which are saved the errors and the description:
+---
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+
+---
+Summary results:
+---
+summary +     72 in 00:00:30 =    2.4/s Avg:  3824 Min:  2326 Max: 12229 Err:     0 (0.00%) Active: 10 Started: 10 Finished: 0
+summary +     28 in 00:00:10 =    2.7/s Avg:  2372 Min:  2328 Max:  2498 Err:     0 (0.00%) Active: 0 Started: 10 Finished: 10
+summary =    100 in 00:00:40 =    2.5/s Avg:  3418 Min:  2326 Max: 12229 Err:     0 (0.00%)
+
+---
