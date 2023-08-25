@@ -1,9 +1,3 @@
-
-# stages:
-# - stage: JMeterTest
-#   displayName: JMeter Test stage
-#   dependsOn: Deploy
-#   condition: and(succeeded(), eq('${{ parameters.JMeter }}', 'true'))
 parameters:
   - name: threads
     type: string
@@ -54,6 +48,15 @@ jobs:
   - script: |
       $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.5/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
     displayName: 'Run JMeter Test'
+    
+  - script: |  
+      cat $(System.DefaultWorkingDirectory)/test_summary.jtl  
+    displayName: 'Print .jtl File'  
+    
+  - script: |  
+      cat $(System.DefaultWorkingDirectory)/summary.txt  
+    displayName: 'Print .txt File'  
+
   - task: PythonScript@0
     inputs:
       scriptSource: 'inline'
@@ -112,7 +115,10 @@ jobs:
         output_file_path =  r'$(System.DefaultWorkingDirectory)/TestResults.txt'
 
         concatenate_files(test_summary, summary, output_file_path)
-
+  
+  - script: |  
+      cat $(System.DefaultWorkingDirectory)/TestResults.txt  
+    displayName: 'Print .txt File'  
   - task: PublishPipelineArtifact@1
     inputs:
       targetPath: '$(System.DefaultWorkingDirectory)/TestResults.txt'
