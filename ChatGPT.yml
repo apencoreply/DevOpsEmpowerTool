@@ -75,7 +75,7 @@ jobs:
         #'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.''
         $payload = @{
           messages = @(
-            @{ role = 'system'; content = '' },
+            @{ role = 'system'; content = 'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.' },
             @{ role = 'user'; content = (  
               "----",  
               "JTL Results:",  
