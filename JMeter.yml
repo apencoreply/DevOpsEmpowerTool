@@ -41,10 +41,10 @@ jobs:
         $rampup = "$(${{ parameters.rampup }})"
         $loops = "$(${{ parameters.loops }})"
         $content = Get-Content -Path $filePath -Raw
-
-        $newContent = $content -replace "<stringProp name=`"ThreadGroup.num_threads`">10</stringProp>", "<stringProp name=`"ThreadGroup.num_threads`">$threads</stringProp>"
-        $newContent = $newContent -replace "<stringProp name=`"ThreadGroup.ramp_time`">1</stringProp>", "<stringProp name=`"ThreadGroup.ramp_time`">$rampup</stringProp>"
-        $newContent = $newContent -replace "<stringProp name=`"LoopController.loops`">10</stringProp>", "<stringProp name=`"LoopController.loops`">$loops</stringProp>"
+        
+        $newContent = $content -replace "<stringProp name=`"ThreadGroup.num_threads`">.*", "<stringProp name=`"ThreadGroup.num_threads`">$threads</stringProp>"  
+        $newContent = $newContent -replace "<stringProp name=`"ThreadGroup.ramp_time`">.*", "<stringProp name=`"ThreadGroup.ramp_time`">$rampup</stringProp>"  
+        $newContent = $newContent -replace "<stringProp name=`"LoopController.loops`">.*", "<stringProp name=`"LoopController.loops`">$loops</stringProp>" 
 
         $newContent | Set-Content -Path $filePath
   
