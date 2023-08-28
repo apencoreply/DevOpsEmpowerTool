@@ -72,10 +72,10 @@ jobs:
         # Prepare payload for API request
         #"Provide me example on how could improve the snippet of code, based on Function code and JTL Results:",  
         #"Provide improved implementation example taking into account the following:",
-        #'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.''
+        #'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.'
         $payload = @{
           messages = @(
-            @{ role = 'system'; content = 'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.' },
+            @{ role = 'system'; content = '' },
             @{ role = 'user'; content = (
               "----",  
               "JTL Results:",  
