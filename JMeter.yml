@@ -27,7 +27,10 @@ jobs:
 
         Invoke-WebRequest -Uri $jmeterZipUrl -OutFile $jmeterZipPath
         Expand-Archive -Path $jmeterZipPath -DestinationPath $jmeterExtractPath -Force
-  
+
+  - script: |  
+      cat $(System.DefaultWorkingDirectory)/*.jmx  
+    displayName: 'Print .jmx File before'  
   - task: PowerShell@2
     displayName: 'Set parameters runtime'
     inputs:
@@ -45,6 +48,10 @@ jobs:
 
         $newContent | Set-Content -Path $filePath
   
+  - script: |  
+      cat $(System.DefaultWorkingDirectory)/*.jmx  
+    displayName: 'Print .jmx File after'  
+
   - script: |
       $(System.DefaultWorkingDirectory)/jmeter/apache-jmeter-5.5/bin/jmeter -n -t $(System.DefaultWorkingDirectory)/*.jmx -l $(System.DefaultWorkingDirectory)/test_summary.jtl > $(System.DefaultWorkingDirectory)/summary.txt
     displayName: 'Run JMeter Test'
