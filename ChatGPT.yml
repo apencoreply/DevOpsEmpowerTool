@@ -77,7 +77,6 @@ jobs:
           messages = @(
             @{ role = 'system'; content = 'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.' },
             @{ role = 'user'; content = (
-              "Provide improved implementation example taking into account the following:",
               "----",  
               "JTL Results:",  
               "---",  
