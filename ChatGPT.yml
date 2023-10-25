@@ -1,10 +1,3 @@
-
-# stages:
-# - stage: ChatGPT
-#   displayName: ChatGPT stage
-#   dependsOn: JMeterTest
-#   condition: and(succeeded(), eq('${{ parameters.ChatGPT }}', 'true'))
-
 parameters:
   - name: tokens
     type: string
@@ -15,24 +8,6 @@ parameters:
   - name: model
     type: string
     default: 'GPT4'
-  # - name: apiKey
-  #   type: string
-  #   default: ''
-  # - name: apiUrl
-  #   type: string
-  #   default: ''
-  # - name: EmailUsername
-  #   type: string
-  #   default: ''
-  # - name: EmailPassword
-  #   type: string
-  #   default: ''
-  # - name: EmailUsernameRecipient
-  #   type: string
-  #   default: ''
-  # - name: EmailAPIKEY
-  #   type: string
-  #   default: ''
   - name: workingDir
     type: string
     default: '$(System.DefaultWorkingDirectory)'
@@ -42,6 +17,10 @@ parameters:
   - name: chatid
     type: string
     default: '549538016'
+  - name: azSubscription
+    type: string
+    default: ''
+    
 
 jobs:
 - job: OpenAi
@@ -55,7 +34,7 @@ jobs:
     inputs:
       artifactName: 'JTLResults'
       targetPath: '$(System.DefaultWorkingDirectory)'
-    
+
   # - task: PowerShell@2
   #   displayName: 'Prepare JTL Results and Function Code'
   #   inputs:
@@ -64,19 +43,16 @@ jobs:
   #       $workingDir = "${{ parameters.workingDir }}"
   #       echo "Function Code:"
   #       cat "$workingDir/*.cs"
-  #       cat "$workingDir/*.cs" > "$(System.DefaultWorkingDirectory)/function_code.txt"
   #       echo "JTL Results:"
   #       cat "$(System.DefaultWorkingDirectory)/TestResults.txt"
-  #       cat "$(System.DefaultWorkingDirectory)/TestResults.txt" > "$(System.DefaultWorkingDirectory)/TestResults.txt"
 
   - task: AzureKeyVault@2
     inputs:
-      azureSubscription: 'SCPenco'
+      azureSubscription: '${{ parameters.azSubscription }}'
       KeyVaultName: 'DevEmpower'
       SecretsFilter: '${{ parameters.model }}-KEY,${{ parameters.model }}-URL'
       RunAsPreJob: false
 
-        # $functionCodeFile = "$(System.DefaultWorkingDirectory)/function_code.txt"  
   - task: PowerShell@2
     displayName: 'Call ChatGPT API'
     inputs:
@@ -94,13 +70,29 @@ jobs:
         $functionCode = Get-Content -Path $functionCodeFile
 
         # Prepare payload for API request
-         $payload = @{
-            messages = @(
-              @{ role = 'system'; content = 'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.' },
-              @{ role = 'user'; content = "Provide me exmaple on how could improve the snippet of code, based on Function code and JTL Results:\n----\nJTL Results:\n---\n$jtlResults\n---\nFunction Code:\n---\n$functionCode\n---\n----"}
-            )
-            temperature = $temperature
-            max_tokens = $tokens
+        #"Provide me example on how could improve the snippet of code, based on Function code and JTL Results:",  
+        #"Provide improved implementation example taking into account the following:", <- usato questo
+        #'You are a system that analyzes source code and JMeter results to assist any type of developer in enhancing and improving performance in the code.'
+        $payload = @{
+          messages = @(
+            @{role = "system"; content = "You are a system that analyzes source code and JMeter results to assist junior developer in enhancing and improving performance in the code."},
+            @{ role = 'user'; content = (
+              "Provide improved implementation example taking into account the following:",
+              "----",  
+              "JTL Results:",  
+              "---",  
+              "$jtlResults",
+              "---",  
+              "Function Code:",  
+              "---",  
+              "$functionCode",
+              "---",  
+              "----"  
+            ) -join "`n"
+            }
+          )
+          temperature = $temperature
+          max_tokens = $tokens
         }
         $payloadJson = $payload | ConvertTo-Json
 
@@ -113,11 +105,15 @@ jobs:
         # Process the API response as needed
         # For example, extract and utilize the generated text
         $generatedText = $response.choices[0].message.content
+        #$generatedText = $response
 
         # Display the generated text
         Write-Host $generatedText
 
         $generatedText | Out-File "$(System.DefaultWorkingDirectory)/generatedText.md" -Encoding utf8
+
+        # Save the user content to a file  
+        $payload.messages[1].content | Out-File "$(System.DefaultWorkingDirectory)/userContent.txt" -Encoding utf8
     
 
   - task: UsePythonVersion@0
@@ -138,18 +134,20 @@ jobs:
         
         bot_token = '6096186625:AAHcTptWfiK5CIAmSEcmjEtpfJA1oiKGR_Q'
         chat_id = '${{ parameters.chatid }}'
-        document_path = r'$(System.DefaultWorkingDirectory)/generatedText.md'
+        document_paths = [r'$(System.DefaultWorkingDirectory)/generatedText.md',
+                         r'$(System.DefaultWorkingDirectory)/userContent.txt']
         caption = '${{ parameters.caption }}'
         
         api_url = f'https://api.telegram.org/bot{bot_token}/sendDocument'
         
-        with open(document_path, 'rb') as document:
-            files = {'document': document}
-            payload = {
-                'chat_id': chat_id,
-                'caption': caption
-            }
-            response = requests.post(api_url, files=files, data=payload)
+        for document_path in document_paths:
+          with open(document_path, 'rb') as document:
+              files = {'document': document}
+              payload = {
+                  'chat_id': chat_id,
+                  'caption': caption
+              }
+              response = requests.post(api_url, files=files, data=payload)
         
         # Check the response status code or content for errors
         print(response.status_code, response.content)
