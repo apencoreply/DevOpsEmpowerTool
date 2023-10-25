@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-07-05T15:34:56.766Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.67" etag="s7sbGy4htGpt021Eut7H" version="21.5.2" type="github">
+<mxfile host="app.diagrams.net" modified="2023-09-28T14:57:49.272Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" etag="vvAbJoSH_Yha2Y7FiSXH" version="22.0.0" type="device">
   <diagram name="Page-1" id="13e1069c-82ec-6db2-03f1-153e76fe0fe0">
-    <mxGraphModel dx="1050" dy="573" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+    <mxGraphModel dx="1050" dy="534" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -24,7 +24,7 @@
         <mxCell id="_nKnMAWIsF47tJlzfX2x-5" value="JMeter" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="420" y="30" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="_nKnMAWIsF47tJlzfX2x-6" value="Notification (Email)" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="_nKnMAWIsF47tJlzfX2x-6" value="Notification (Telegram)" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="890" y="30" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="_nKnMAWIsF47tJlzfX2x-7" value="Dashboard Report" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">

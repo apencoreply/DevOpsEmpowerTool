@@ -13,10 +13,10 @@ form {
 }  
   
 fieldset {  
-  flex: 0 0 30%; /* Each fieldset will take up roughly a third of the row */  
+  flex: 0 0 23%; /* Each fieldset will take up roughly a third of the row */  
   border: 1px solid #ccc;  
-  margin: 10px;  
-  padding: 10px;  
+  margin: 7px;  
+  padding: 7px;  
 }  
   
 legend {  
@@ -55,15 +55,17 @@ input[type="button"]:hover {
   background-color: #45a049;  
 }  
   
-#output {  
-  width: 100%;  
-  margin: 20px 0;  
-  padding: 20px;  
-  border: 1px solid #ccc;  
-  border-radius: 4px;  
-  box-sizing: border-box;  
-  white-space: pre-wrap;  
-}  
+#output {    
+  width: 100%;    
+  height: 200px; /* or any height you want */  
+  margin: 20px 0;    
+  padding: 20px;    
+  border: 1px solid #ccc;    
+  border-radius: 4px;    
+  box-sizing: border-box;    
+  white-space: pre-wrap;    
+  overflow: auto; /* add scrollbar when the content exceeds the height */  
+}    
 </style>  
 </head>  
 <body>  
@@ -81,23 +83,29 @@ input[type="button"]:hover {
   <fieldset>  
     <legend>OpenAI Configuration</legend>  
     GPT Model:  
-    <select id="model" onchange="updateMaxToken()">  
+    <select id="model" onchange="validateInput('maxtoken', 1, 20000)">  
       <option value="GPT4" selected>GPT-4</option>  
-      <option value="GPT3">GPT-3</option>  
-      <option value="DAVINCI">DaVinci</option>  
+      <option value="GPT3">GPT-3</option> 
     </select><br>  
     Max Token: <input type="number" value="4000"  id="maxtoken" min="1000" max="20000" step="1" onchange="validateInput('maxtoken', 1, 20000)"><br>  
     Temperature: <input type="number" value="0.7" id="temperature" min="0" max="1" step="0.01" onchange="validateInput('temperature', 0, 1)"><br>  
   </fieldset>  
   
   <fieldset>  
-    <legend>Pipeline Configuration</legend>  
+    <legend>Telegram Configuration</legend>  
     <!-- Pipeline directory: <input type="text" value="$(System.DefaultWorkingDirectory)" id="workingDir"><br>   -->
-    Root Directory: <input type="text" value="$(System.DefaultWorkingDirectory)" id="rootDir" readonly><br>  
-    Working Directory: <input type="text" id="workingDir" value="/"><br> 
     Message caption: <input type="text" value="Checkout these suggestions!" id="caption"><br>  
-    chatid: <input type="text" value="549538016" id="chatid"><br>  
-  </fieldset>  
+    chatid: <input type="text" value="549538016" id="chatid"><br> 
+  </fieldset>
+  
+  <fieldset>  
+    <legend>Variables Configuration</legend>  
+    <!-- Pipeline directory: <input type="text" value="$(System.DefaultWorkingDirectory)" id="workingDir"><br>   -->
+    <!-- Root Directory: <input type="text" value="$(System.DefaultWorkingDirectory)" id="rootDir" readonly><br>   -->
+    Working Directory: <input type="text" id="workingDir" value="/"><br> 
+    Service connection to azure keyvault: <input type="text" value="DevOptimizeAISubscription" id="sConnection"><br>  
+    Service connection to DevOptimizeAI repository: <input type="text" value="DevOptimizeAIRepository" id="gConnection"><br>  
+  </fieldset>
   
   <input type="button" value="Submit" onclick="submitForm()">  
 </form>  
@@ -118,8 +126,10 @@ function submitForm() {
   var temperature = document.getElementById("temperature").value;
   var caption = document.getElementById("caption").value;  
   var chatid = document.getElementById("chatid").value;  
-  var rootDir = document.getElementById("rootDir").value;    
-  var workingDir = document.getElementById("workingDir").value;   
+  var sConnection = document.getElementById("sConnection").value;  
+  var rootDir = "$(System.DefaultWorkingDirectory)";   
+  var gConnection = document.getElementById("gConnection").value; 
+  var workingDir = document.getElementById("workingDir").value;
   var fullWorkingDir = rootDir; 
   if (workingDir.trim() !== '' && workingDir.trim() !== '/') {  
     fullWorkingDir += workingDir;  
@@ -149,18 +159,16 @@ function submitForm() {
       workingDir: $(workingDirectory)
       caption: \'${caption}\'  
       chatid: \'${chatid}\'
+      azSubscription: \'${sConnection}\'
 
 resources:
   repositories:
     - repository: templates
       type: github
       name: apencoreply/DevOpsEmpowerTool
-      endpoint: devopsempowertool
+      endpoint: \'${gConnection}\'
 
 variables:
-  # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: 'SCPenco'
-
   # Working Directory
   workingDirectory: ${fullWorkingDir}
 `;  
@@ -187,13 +195,17 @@ function updateMaxToken() {
   if (model === 'GPT4') {  
     maxtoken.max = '20000';  
   } else {  
-    maxtoken.max = '4000';  
-  }  
+    maxtoken.max = '10000';  
+  }
+  return maxtoken.max
 } 
 function validateInput(id, min, max) {  
   var input = document.getElementById(id);
   if (id !== 'temperature') {  
     input.value = Math.round(input.value);  
+  }
+  if (id === 'maxtoken'){
+    max = updateMaxToken();
   }
   if (parseInt(input.value) > max) {  
     alert('The value cannot exceed ' + max);  
