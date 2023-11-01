@@ -68,6 +68,9 @@ jobs:
     inputs:
       scriptSource: 'inline'
       script: |
+        from collections import Counter  
+        import csv
+        
         def filter_lines_with_summary(file_path):
           filtered_lines = []
           with open(file_path, 'r') as file:
@@ -82,26 +85,25 @@ jobs:
             
         summary = r'$(System.DefaultWorkingDirectory)/summary.txt'
         filter_lines_with_summary(summary)
-
-        from collections import Counter  
-  
+          
         def remove_lines_with_200_ok(file_path):  
             error_lines = []  
               
             with open(file_path, 'r') as file:  
-                for line in file:  
-                    if '200,OK' not in line:  
-                        error_lines.append(line.strip())  
+                reader = csv.DictReader(file)  
+                for row in reader:  
+                    if row['responseCode'] != '200':  
+                        error_lines.append((row['responseCode'], row['responseMessage']))  
               
             # Count occurrences of each error line  
             error_counter = Counter(error_lines)  
               
             # Prepare a list of strings with error counts  
-            error_summary = [f'{count} x {error}' for error, count in error_counter.items()]  
+            error_summary = [f'{count} x {code} {message}' for (code, message), count in error_counter.items()]  
               
             # Write the error summary back to the same file  
             with open(file_path, 'w') as file:  
-                file.write('\n'.join(error_summary))  
+                file.write('\n'.join(error_summary))   
 
         test_summary = r'$(System.DefaultWorkingDirectory)/test_summary.jtl'
         remove_lines_with_200_ok(test_summary)
