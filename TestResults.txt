@@ -1,12 +1,20 @@
 Result from the JTL file from the JMeter test in which are saved the errors and the description:
 ---
-timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-
+66587 x 429 Too Many Requests
+2941 x 500 Internal Server Error
 ---
 Summary results:
 ---
-summary +     72 in 00:00:30 =    2.4/s Avg:  3824 Min:  2326 Max: 12229 Err:     0 (0.00%) Active: 10 Started: 10 Finished: 0
-summary +     28 in 00:00:10 =    2.7/s Avg:  2372 Min:  2328 Max:  2498 Err:     0 (0.00%) Active: 0 Started: 10 Finished: 10
-summary =    100 in 00:00:40 =    2.5/s Avg:  3418 Min:  2326 Max: 12229 Err:     0 (0.00%)
+summary +  27611 in 00:01:59 =  231.1/s Avg:  4154 Min:    19 Max: 102787 Err: 23309 (84.42%) Active: 1000 Started: 1000 Finished: 0
+summary +  50478 in 00:00:30 = 1683.0/s Avg:   553 Min:    18 Max:  8504 Err: 44202 (87.57%) Active: 796 Started: 1000 Finished: 204
+summary =  78089 in 00:02:29 =  522.5/s Avg:  1826 Min:    18 Max: 102787 Err: 67511 (86.45%)
+summary +   7010 in 00:00:30 =  233.7/s Avg:  3191 Min:  1064 Max: 11273 Err:   791 (11.28%) Active: 666 Started: 1000 Finished: 334
+summary =  85099 in 00:02:59 =  474.2/s Avg:  1939 Min:    18 Max: 102787 Err: 68302 (80.26%)
+summary +   6943 in 00:00:30 =  231.4/s Avg:  2559 Min:   530 Max:  7988 Err:   798 (11.49%) Active: 470 Started: 1000 Finished: 530
+summary =  92042 in 00:03:29 =  439.4/s Avg:  1985 Min:    18 Max: 102787 Err: 69100 (75.07%)
+summary +   7252 in 00:00:30 =  241.7/s Avg:  1395 Min:   307 Max:  9672 Err:   428 (5.90%) Active: 76 Started: 1000 Finished: 924
+summary =  99294 in 00:03:59 =  414.7/s Avg:  1942 Min:    18 Max: 102787 Err: 69528 (70.02%)
+summary +    706 in 00:00:09 =   75.6/s Avg:   325 Min:   308 Max:   746 Err:     0 (0.00%) Active: 0 Started: 1000 Finished: 1000
+summary = 100000 in 00:04:09 =  401.9/s Avg:  1931 Min:    18 Max: 102787 Err: 69528 (69.53%)
 
 ---
