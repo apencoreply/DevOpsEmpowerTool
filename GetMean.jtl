@@ -1,21 +1,18 @@
 timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-1692973921118,8234,HTTP Request,200,OK,Thread Group 1-1,text,true,,130,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,8229,0,1507
-1692973921266,8209,HTTP Request,200,OK,Thread Group 1-4,text,true,,127,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,8209,0,1472
-1692973921158,8602,HTTP Request,200,OK,Thread Group 1-3,text,true,,130,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,8602,0,1526
-1692973921590,8176,HTTP Request,200,OK,Thread Group 1-7,text,true,,127,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,8176,0,1040
-1692973921131,8741,HTTP Request,200,OK,Thread Group 1-2,text,true,,130,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,8741,0,1552
-1692973921456,8425,HTTP Request,200,OK,Thread Group 1-6,text,true,,127,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=India,8425,0,1233
-1692973921663,8246,HTTP Request,200,OK,Thread Group 1-8,text,true,,127,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,8246,0,1096
-1692973921863,8147,HTTP Request,200,OK,Thread Group 1-10,text,true,,127,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=India,8147,0,879
-1692973921769,8281,HTTP Request,200,OK,Thread Group 1-9,text,true,,130,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,8281,0,919
-1692973921361,8797,HTTP Request,200,OK,Thread Group 1-5,text,true,,127,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=India,8797,0,1368
-1692973929770,2354,HTTP Request,200,OK,Thread Group 1-7,text,true,,195,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,2354,0,0
-1692973930015,2338,HTTP Request,200,OK,Thread Group 1-10,text,true,,195,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=India,2338,0,0
-1692973930163,2332,HTTP Request,200,OK,Thread Group 1-5,text,true,,195,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,2332,0,0
-1692973932125,2419,HTTP Request,200,OK,Thread Group 1-7,text,true,,195,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,2419,0,0
-1692973932353,2334,HTTP Request,200,OK,Thread Group 1-10,text,true,,195,155,10,10,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,2334,0,0
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1699096653555,96198,HTTP Request,429,Too Many Requests,Thread Group 1-65,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,96193,0,96041
+1699096653279,96483,HTTP Request,429,Too Many Requests,Thread Group 1-15,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,96483,0,96307
+1699096653460,96303,HTTP Request,429,Too Many Requests,Thread Group 1-668,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,96303,0,96128
+1699096653791,95972,HTTP Request,429,Too Many Requests,Thread Group 1-902,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=India,95972,0,95795
+1699096653222,96541,HTTP Request,429,Too Many Requests,Thread Group 1-538,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,96541,0,96349
+1699096653235,96528,HTTP Request,429,Too Many Requests,Thread Group 1-646,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,96528,0,96351
+1699096653714,96050,HTTP Request,429,Too Many Requests,Thread Group 1-970,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=India,96050,0,95866
+1699096653624,96140,HTTP Request,429,Too Many Requests,Thread Group 1-139,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,96140,0,95950
+1699096653425,96339,HTTP Request,429,Too Many Requests,Thread Group 1-885,,false,,158,155,1000,1000,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,96339,0,96149
 ...
 ...
 ...
-1692973958226,2370,HTTP Request,200,OK,Thread Group 1-6,text,true,,195,155,2,2,https://getmean.azurewebsites.net/api/GetMean?Country=Italy,2370,0,0
-1692973958227,2371,HTTP Request,200,OK,Thread Group 1-4,text,true,,198,155,1,1,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,2371,0,0
+1699096898618,315,HTTP Request,200,OK,Thread Group 1-642,text,true,,195,155,2,2,https://getmean.azurewebsites.net/api/GetMean?Country=India,315,0,0
+1699096898700,325,HTTP Request,200,OK,Thread Group 1-851,text,true,,195,155,2,2,https://getmean.azurewebsites.net/api/GetMean?Country=India,325,0,0
+1699096898933,315,HTTP Request,200,OK,Thread Group 1-642,text,true,,195,155,2,2,https://getmean.azurewebsites.net/api/GetMean?Country=India,315,0,0
+1699096899025,323,HTTP Request,200,OK,Thread Group 1-851,text,true,,198,155,1,1,https://getmean.azurewebsites.net/api/GetMean?Country=Japan,323,0,0
